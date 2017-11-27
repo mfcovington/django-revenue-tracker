@@ -102,3 +102,8 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# django project
+/db.sqlite3
+/manage.py
+/mysite/
