@@ -1,6 +1,7 @@
 from django.contrib import admin
 
 from ..models import Contact, Country, Customer, Institution, Vendor
+from .transactions import TransactionInline
 
 
 class CustomerInline(admin.TabularInline):
@@ -29,6 +30,7 @@ class CountryAdmin(admin.ModelAdmin):
 
 @admin.register(Customer)
 class CustomerAdmin(admin.ModelAdmin):
+    inlines = [TransactionInline]
     list_display = [
         'customer',
         'contact_name',
