@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Contact, Country, Customer, Institution, Vendor
+from ..models import Contact, Country, Customer, Institution, Vendor
 
 
 class CustomerInline(admin.TabularInline):
