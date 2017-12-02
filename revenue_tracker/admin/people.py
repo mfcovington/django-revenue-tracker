@@ -20,11 +20,13 @@ class ContactAdmin(admin.ModelAdmin):
         'phone',
         'fax',
     ]
+    save_on_top = True
 
 
 @admin.register(Country)
 class CountryAdmin(admin.ModelAdmin):
     inlines = [VendorInline]
+    save_on_top = True
     search_fields = ['name']
 
 
@@ -41,6 +43,7 @@ class CustomerAdmin(admin.ModelAdmin):
         'institution__institution_type',
         'institution__country'
     ]
+    save_on_top = True
     search_fields = [
         'institution__name',
         'name',
@@ -61,6 +64,7 @@ class InstitutionAdmin(admin.ModelAdmin):
         'institution_type',
         'country'
     ]
+    save_on_top = True
     search_fields = ['name']
 
 
@@ -72,6 +76,7 @@ class VendorAdmin(admin.ModelAdmin):
         'contact_name',
         'country'
     ]
+    save_on_top = True
     search_fields = [
         'name',
         'contact__name',

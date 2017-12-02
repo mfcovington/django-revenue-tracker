@@ -9,12 +9,12 @@ class TransactionInline(admin.StackedInline):
 
 @admin.register(Quote)
 class QuoteAdmin(admin.ModelAdmin):
-    pass
+    save_on_top = True
 
 
 @admin.register(Invoice)
 class InvoiceAdmin(admin.ModelAdmin):
-    pass
+    save_on_top = True
 
 
 @admin.register(Transaction)
@@ -27,6 +27,7 @@ class TransactionAdmin(admin.ModelAdmin):
         'date_fulfilled',
     ]
     list_filter = ['transaction_type']
+    save_on_top = True
     search_fields = [
         'customer__name',
         'customer__institution__name',
