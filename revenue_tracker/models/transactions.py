@@ -1,3 +1,5 @@
+import os
+
 from django.db import models
 from django.db.models import Count, Min, Max, Sum
 
@@ -12,10 +14,7 @@ TRANSACTION_TYPE_CHOICES = [
 
 
 def quote_or_invoice_path(instance, filename):
-    print('instance.transaction')
-    print(dir(instance.transaction))
-    print(instance.transaction)
-    return '{}/{}'.format(instance.transaction, filename)
+    return '{}/{}'.format(instance.doc_type, filename)
 
 
 class QuoteOrInvoice(models.Model):
@@ -26,15 +25,19 @@ class QuoteOrInvoice(models.Model):
     date = models.DateField()
     number = models.CharField(max_length=255)
     pdf = models.FileField(
-        blank=True,
         max_length=500,
-        null=True,
         upload_to=quote_or_invoice_path,
     )
 
+    def __str__(self):
+        return os.path.basename(self.number)
+
 
 class Quote(QuoteOrInvoice):
-    pass
+
+    @property
+    def doc_type(self):
+        return 'quotes'
 
 
 class Invoice(QuoteOrInvoice):
@@ -42,6 +45,10 @@ class Invoice(QuoteOrInvoice):
         blank=True,
         null=True,
     )
+
+    @property
+    def doc_type(self):
+        return 'invoices'
 
 
 class RoyaltiesManager(models.Manager):
