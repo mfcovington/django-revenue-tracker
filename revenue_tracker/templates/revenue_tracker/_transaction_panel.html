@@ -1,0 +1,65 @@
+<a name="{{ anchor }}"></a>
+<div class="panel panel-{{ panel_type }}">
+
+  <div class="panel-heading">
+    <h1 class="panel-title"><a href='#summary'>{{ panel_title }}</a></h1>
+  </div>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Customer</th>
+        {% if transaction_type == 'all' %}
+          <th>Transaction Type</th>
+        {% endif %}
+        <th>Size</th>
+        <th>Quote</th>
+        <th>Invoice</th>
+        <th>Total Price</th>
+        <th>Price / Sample</th>
+        <th>IP-Related Price</th>
+        <th>Royalties Owed</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for transaction in transaction_list %}
+        <tr>
+          <td>{{ transaction.date }}</td>
+          <td>{{ transaction.customer }}</td>
+          {% if transaction_type == 'all' %}
+            <td>{{ transaction.get_transaction_type_display }}</td>
+          {% endif %}
+          <td>{{ transaction.number_of_reactions }} rxn{{ transaction.number_of_reactions|pluralize }}</td>
+          <td>
+            {% if transaction.quote %}
+              <a href="{{ transaction.quote.pdf.url }}" target="_blank">
+                {{ transaction.quote.number }}
+              </a>
+            {% else %}
+              -
+            {% endif %}
+          </td>
+          <td>
+            {% if transaction.invoice %}
+              <a href="{{ transaction.invoice.pdf.url }}" target="_blank">
+                {{ transaction.invoice.number }}
+              </a>
+            {% else %}
+              -
+            {% endif %}
+          </td>
+          <td>{{ transaction.total_price }}</td>
+          <td>{{ transaction.price_per_sample }}</td>
+          <td>{{ transaction.ip_related_price }}</td>
+          <td>{{ transaction.royalties_owed }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <a href="#{{ anchor }}">
+    <div class="panel-footer panel-{{ panel_type }}"></div>
+  </a>
+
+</div>
