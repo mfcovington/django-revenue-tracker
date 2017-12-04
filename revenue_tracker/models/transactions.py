@@ -95,6 +95,11 @@ class Transaction(models.Model):
         max_length=7,
     )
     customer = models.ForeignKey('Customer')
+    vendor = models.ForeignKey(
+        'Vendor',
+        blank=True,
+        null=True,
+    )
     number_of_reactions = models.PositiveSmallIntegerField()
     total_price = MoneyField(
         decimal_places=2,

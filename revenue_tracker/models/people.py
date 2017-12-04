@@ -55,11 +55,6 @@ class Customer(models.Model):
         max_length=255,
     )
     contact = models.ForeignKey('Contact')
-    vendor = models.ForeignKey(
-        'Vendor',
-        blank=True,
-        null=True,
-    )
 
     def __str__(self):
         return self.customer
@@ -110,6 +105,10 @@ class Vendor(models.Model):
     )
     contact = models.ForeignKey('Contact')
     country = models.ForeignKey('Country')
+    customers = models.ManyToManyField(
+        'Customer',
+        through='Transaction',
+    )
 
     def __str__(self):
         return self.name

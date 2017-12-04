@@ -22,6 +22,7 @@ class TransactionAdmin(admin.ModelAdmin):
     list_display = [
         'date',
         'customer',
+        'vendor',
         'transaction_type',
         'number_of_reactions',
         'date_fulfilled',
@@ -36,4 +37,6 @@ class TransactionAdmin(admin.ModelAdmin):
         'customer__name',
         'customer__institution__name',
         'customer__contact__name',
+        'vendor__name',
+        'vendor__contact__name',
     ]

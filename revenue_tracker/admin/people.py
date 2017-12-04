@@ -37,7 +37,6 @@ class CustomerAdmin(admin.ModelAdmin):
         'customer',
         'contact_name',
         'institution_type',
-        'vendor'
     ]
     list_filter = [
         'institution__institution_type',
@@ -70,7 +69,7 @@ class InstitutionAdmin(admin.ModelAdmin):
 
 @admin.register(Vendor)
 class VendorAdmin(admin.ModelAdmin):
-    inlines = [CustomerInline]
+    inlines = [TransactionInline]
     list_display = [
         'name',
         'contact_name',
