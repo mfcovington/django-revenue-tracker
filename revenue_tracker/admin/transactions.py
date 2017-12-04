@@ -25,6 +25,10 @@ class TransactionAdmin(admin.ModelAdmin):
         'transaction_type',
         'number_of_reactions',
         'date_fulfilled',
+        'total_price',
+        'price_per_sample',
+        'ip_related_price',
+        'royalties_owed',
     ]
     list_filter = ['transaction_type']
     save_on_top = True

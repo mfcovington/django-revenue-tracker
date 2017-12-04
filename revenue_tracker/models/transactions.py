@@ -6,6 +6,9 @@ from django.db.models import Count, Min, Max, Sum
 from djmoney.models.fields import MoneyField
 
 
+ROYALTY_PERCENTAGE = 0.025 # import from settings (for first 1 million. After that, 2.75%)
+
+
 TRANSACTION_TYPE_CHOICES = [
     ('kit', 'Kit Sale'),
     ('service', 'Service Contract'),
@@ -130,3 +133,11 @@ class Transaction(models.Model):
         return '{} - {} - {} - {}'.format(
             self.date, self.customer, self.transaction_type,
             self.number_of_reactions)
+
+    @property
+    def royalties_owed(self):
+        return self.ip_related_price * ROYALTY_PERCENTAGE
+
+    @property
+    def price_per_sample(self):
+        return self.total_price / self.number_of_reactions
