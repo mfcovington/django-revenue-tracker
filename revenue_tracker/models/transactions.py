@@ -94,7 +94,11 @@ class Transaction(models.Model):
         choices=TRANSACTION_TYPE_CHOICES,
         max_length=7,
     )
-    customer = models.ForeignKey('Customer')
+    customer = models.ForeignKey(
+        'Customer',
+        blank=True,
+        null=True,
+    )
     vendor = models.ForeignKey(
         'Vendor',
         blank=True,

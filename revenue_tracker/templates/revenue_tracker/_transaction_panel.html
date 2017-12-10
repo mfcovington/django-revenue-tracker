@@ -10,6 +10,7 @@
       <tr>
         <th>Date</th>
         <th>Customer</th>
+        <th>Vendor</th>
         {% if transaction_type == 'all' %}
           <th>Transaction Type</th>
         {% endif %}
@@ -26,7 +27,8 @@
       {% for transaction in transaction_list %}
         <tr>
           <td>{{ transaction.date }}</td>
-          <td>{{ transaction.customer }}</td>
+          <td>{{ transaction.customer|default:"-" }}</td>
+          <td>{{ transaction.vendor|default:"-" }}</td>
           {% if transaction_type == 'all' %}
             <td>{{ transaction.get_transaction_type_display }}</td>
           {% endif %}

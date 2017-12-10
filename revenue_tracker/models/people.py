@@ -54,7 +54,11 @@ class Customer(models.Model):
         blank=True,
         max_length=255,
     )
-    contact = models.ForeignKey('Contact')
+    contact = models.ForeignKey(
+        'Contact',
+        blank=True,
+        null=True,
+    )
 
     def __str__(self):
         return self.customer
