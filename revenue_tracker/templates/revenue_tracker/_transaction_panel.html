@@ -28,8 +28,20 @@
       {% for transaction in transaction_list %}
         <tr>
           <td>{{ transaction.date }}</td>
-          <td>{{ transaction.customer|default:"-" }}</td>
-          <td>{{ transaction.vendor|default:"-" }}</td>
+          <td>
+            {% if transaction.customer.website %}
+              <a href="{{ transaction.customer.website }}" target="_blank">{{ transaction.customer }}</a>
+            {% else %}
+              {{ transaction.customer|default:"-" }}
+            {% endif %}
+          </td>
+          <td>
+            {% if transaction.vendor.website %}
+              <a href="{{ transaction.vendor.website }}" target="_blank">{{ transaction.vendor }}</a>
+            {% else %}
+              {{ transaction.vendor|default:"-" }}
+            {% endif %}
+          </td>
           {% if transaction_type == 'all' %}
             <td>{{ transaction.get_transaction_type_display }}</td>
           {% endif %}

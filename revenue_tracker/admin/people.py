@@ -19,6 +19,7 @@ class ContactAdmin(admin.ModelAdmin):
         'email',
         'phone',
         'fax',
+        'website',
     ]
     save_on_top = True
 
@@ -37,6 +38,7 @@ class CustomerAdmin(admin.ModelAdmin):
         'customer',
         'contact_name',
         'institution_type',
+        'website',
     ]
     list_filter = [
         'institution__institution_type',
@@ -47,7 +49,8 @@ class CustomerAdmin(admin.ModelAdmin):
         'institution__name',
         'name',
         'contact__name',
-        'vendor__name'
+        'vendor__name',
+        'website',
     ]
 
 
@@ -57,11 +60,13 @@ class InstitutionAdmin(admin.ModelAdmin):
     list_display = [
         'name',
         'institution_type',
-        'country'
+        'country',
+        'website',
     ]
     list_filter = [
         'institution_type',
-        'country'
+        'country',
+        'website',
     ]
     save_on_top = True
     search_fields = ['name']
@@ -73,11 +78,13 @@ class VendorAdmin(admin.ModelAdmin):
     list_display = [
         'name',
         'contact_name',
-        'country'
+        'country',
+        'website',
     ]
     save_on_top = True
     search_fields = [
         'name',
         'contact__name',
-        'country__name'
+        'country__name',
+        'website',
     ]

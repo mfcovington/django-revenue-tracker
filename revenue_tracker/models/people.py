@@ -24,6 +24,9 @@ class Contact(models.Model):
     )
     phone = PhoneNumberField(blank=True)
     fax = PhoneNumberField(blank=True)
+    website = models.URLField(
+        blank=True,
+    )
 
     def __str__(self):
         return self.name
@@ -59,6 +62,9 @@ class Customer(models.Model):
         blank=True,
         null=True,
     )
+    website = models.URLField(
+        blank=True,
+    )
 
     def __str__(self):
         return self.customer
@@ -93,6 +99,9 @@ class Institution(models.Model):
         choices=INSTITUTION_TYPE_CHOICES,
         max_length=15,
     )
+    website = models.URLField(
+        blank=True,
+    )
 
     def __str__(self):
         return self.name
@@ -112,6 +121,9 @@ class Vendor(models.Model):
     customers = models.ManyToManyField(
         'Customer',
         through='Transaction',
+    )
+    website = models.URLField(
+        blank=True,
     )
 
     def __str__(self):
