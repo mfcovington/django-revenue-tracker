@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from ..models import Quote, Invoice, Transaction
+from ..models import Invoice, Order, Quote, Transaction
 
 
 class TransactionInline(admin.StackedInline):
@@ -9,6 +9,11 @@ class TransactionInline(admin.StackedInline):
 
 @admin.register(Quote)
 class QuoteAdmin(admin.ModelAdmin):
+    save_on_top = True
+
+
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
     save_on_top = True
 
 
@@ -26,6 +31,7 @@ class TransactionAdmin(admin.ModelAdmin):
         'transaction_type',
         'number_of_reactions',
         'date_fulfilled',
+        'date_paid',
         'total_price',
         'price_per_sample',
         'ip_related_price',

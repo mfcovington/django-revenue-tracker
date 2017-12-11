@@ -16,6 +16,7 @@
         {% endif %}
         <th>Size</th>
         <th>Quote</th>
+        <th>Order</th>
         <th>Invoice</th>
         <th>Total Price</th>
         <th>Price / Sample</th>
@@ -37,6 +38,15 @@
             {% if transaction.quote %}
               <a href="{{ transaction.quote.pdf.url }}" target="_blank">
                 {{ transaction.quote.number }}
+              </a>
+            {% else %}
+              -
+            {% endif %}
+          </td>
+          <td>
+            {% if transaction.order %}
+              <a href="{{ transaction.order.pdf.url }}" target="_blank">
+                {{ transaction.order.number }}
               </a>
             {% else %}
               -

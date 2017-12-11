@@ -16,11 +16,11 @@ TRANSACTION_TYPE_CHOICES = [
 ]
 
 
-def quote_or_invoice_path(instance, filename):
+def transaction_doc_path(instance, filename):
     return '{}/{}'.format(instance.doc_type, filename)
 
 
-class QuoteOrInvoice(models.Model):
+class TransactionDocument(models.Model):
 
     class Meta:
         abstract = True
@@ -29,25 +29,28 @@ class QuoteOrInvoice(models.Model):
     number = models.CharField(max_length=255)
     pdf = models.FileField(
         max_length=500,
-        upload_to=quote_or_invoice_path,
+        upload_to=transaction_doc_path,
     )
 
     def __str__(self):
         return os.path.basename(self.number)
 
 
-class Quote(QuoteOrInvoice):
+class Quote(TransactionDocument):
 
     @property
     def doc_type(self):
         return 'quotes'
 
 
-class Invoice(QuoteOrInvoice):
-    date_paid = models.DateField(
-        blank=True,
-        null=True,
-    )
+class Order(TransactionDocument):
+
+    @property
+    def doc_type(self):
+        return 'orders'
+
+
+class Invoice(TransactionDocument):
 
     @property
     def doc_type(self):
@@ -123,8 +126,18 @@ class Transaction(models.Model):
         blank=True,
         null=True,
     )
+    date_paid = models.DateField(
+        blank=True,
+        null=True,
+    )
     quote = models.OneToOneField(
         'Quote',
+        blank=True,
+        null=True,
+        related_name='transaction'
+    )
+    order = models.OneToOneField(
+        'Order',
         blank=True,
         null=True,
         related_name='transaction'
