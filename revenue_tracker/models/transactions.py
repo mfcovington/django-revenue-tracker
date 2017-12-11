@@ -130,19 +130,19 @@ class Transaction(models.Model):
         blank=True,
         null=True,
     )
-    quote = models.OneToOneField(
+    quote = models.ForeignKey(
         'Quote',
         blank=True,
         null=True,
         related_name='transaction'
     )
-    order = models.OneToOneField(
+    order = models.ForeignKey(
         'Order',
         blank=True,
         null=True,
         related_name='transaction'
     )
-    invoice = models.OneToOneField(
+    invoice = models.ForeignKey(
         'Invoice',
         blank=True,
         null=True,
