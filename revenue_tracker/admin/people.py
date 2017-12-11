@@ -16,6 +16,7 @@ class VendorInline(admin.TabularInline):
 class ContactAdmin(admin.ModelAdmin):
     list_display = [
         'name',
+        'title',
         'email',
         'phone',
         'fax',
