@@ -24,6 +24,7 @@ class TransactionDocument(models.Model):
 
     class Meta:
         abstract = True
+        ordering = ['number']
 
     date = models.DateField()
     number = models.CharField(max_length=255)
