@@ -26,7 +26,15 @@
     </thead>
     <tbody>
       {% for transaction in transaction_list %}
-        <tr>
+        <tr class="
+          {% if transaction.transaction_type == 'kit' %}
+            alert-success
+          {% elif transaction.transaction_type == 'service' %}
+            alert-info
+          {% elif transaction.transaction_type == 'other' %}
+            alert-warning
+          {% endif %}
+        ">
           <td>{{ transaction.date }}</td>
           <td>
             {% if transaction.customer.website %}
