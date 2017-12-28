@@ -3,6 +3,46 @@ from django.contrib import admin
 from ..models import Invoice, Order, Quote, Transaction
 
 
+class FulfillmentStatusFilter(admin.SimpleListFilter):
+    """
+    Filter Transaction records by whether it has been fulfilled.
+    """
+    title = 'fulfillment status'
+    parameter_name = 'fulfillment_status'
+
+    def lookups(self, request, model_admin):
+        return (
+            ('fulfilled', 'Fulfilled'),
+            ('not_fulfilled', 'Not Fulfilled'),
+        )
+
+    def queryset(self, request, queryset):
+        if self.value() == 'not_fulfilled':
+            return queryset.filter(date_fulfilled=None)
+        elif self.value() == 'fulfilled':
+            return queryset.exclude(date_fulfilled=None)
+
+
+class PaymentStatusFilter(admin.SimpleListFilter):
+    """
+    Filter Transaction records by whether it has been paid.
+    """
+    title = 'payment status'
+    parameter_name = 'payment_status'
+
+    def lookups(self, request, model_admin):
+        return (
+            ('paid', 'Paid'),
+            ('not_paid', 'Not Paid'),
+        )
+
+    def queryset(self, request, queryset):
+        if self.value() == 'not_paid':
+            return queryset.filter(date_paid=None)
+        elif self.value() == 'paid':
+            return queryset.exclude(date_paid=None)
+
+
 class TransactionInline(admin.StackedInline):
     model = Transaction
 
@@ -37,7 +77,11 @@ class TransactionAdmin(admin.ModelAdmin):
         'ip_related_price',
         'royalties_owed',
     ]
-    list_filter = ['transaction_type']
+    list_filter = [
+        'transaction_type',
+        FulfillmentStatusFilter,
+        PaymentStatusFilter,
+    ]
     save_on_top = True
     search_fields = [
         'customer__name',
