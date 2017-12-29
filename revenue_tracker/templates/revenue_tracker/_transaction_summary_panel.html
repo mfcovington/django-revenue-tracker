@@ -1,0 +1,39 @@
+{% load get_verbose_transaction_type humanize %}
+
+<a name="{{ anchor }}"></a>
+<div class="panel panel-{{ panel_type }}">
+
+  <div class="panel-heading">
+    <h1 class="panel-title"><a href='#summary'>{{ panel_title }}</a></h1>
+  </div>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Transaction Type</th>
+        <th>Total Revenue</th>
+        <th>Number of Reactions</th>
+        <th>Revenue / Reaction</th>
+        <th>IP-Related Revenue</th>
+        <th>Royalties Owed</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for report in report_list %}
+        <tr>
+          <td>{{ report.transaction_type|get_verbose_transaction_type }}</td>
+          <td>${{ report.sum_total_price|intcomma }}</td>
+          <td>{{ report.sum_number_of_reactions|intcomma }}</td>
+          <td>${{ report.average_total_price_per_reaction|intcomma }}</td>
+          <td>${{ report.sum_ip_related_price|intcomma }}</td>
+          <td>${{ report.sum_royalties_owed|intcomma }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <a href="#{{ anchor }}">
+    <div class="panel-footer panel-{{ panel_type }}"></div>
+  </a>
+
+</div>

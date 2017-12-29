@@ -1,7 +1,7 @@
 import os
 
 from django.db import models
-from django.db.models import Count, Min, Max, Sum
+from django.db.models import Count, F, ExpressionWrapper, Sum
 
 from djmoney.models.fields import MoneyField
 
@@ -65,24 +65,35 @@ class RoyaltiesManager(models.Manager):
     def get_royalties_report(self):
 
         aggregate_data = Transaction.objects.aggregate(
-            Sum('ip_related_price'), Min('date'), Max('date'), Count('pk'))
+            Sum('total_price'), Sum('number_of_reactions'),
+            Sum('ip_related_price'), Count('pk'))
 
         if (aggregate_data['pk__count'] == 0):
             return {'total': 0, 'total_per_month': 0}
 
         report = {}
 
-        report['from_date'] = aggregate_data['date__min']
-        report['to_date'] = aggregate_data['date__max']
-        report['days'] = (report['to_date'] - report['from_date']).days + 1
-        report['months'] = float(report['days']) / float(30)
-        report['total'] = aggregate_data['ip_related_price__sum']
-        report['total_per_month'] = float(report['total']) / report['months']
+        report['sum_total_price'] = aggregate_data['total_price__sum']
+        report['sum_ip_related_price'] = aggregate_data['ip_related_price__sum']
+        report['sum_number_of_reactions'] = aggregate_data['number_of_reactions__sum']
+        report['average_total_price_per_reaction'] = aggregate_data['total_price__sum'] / aggregate_data['number_of_reactions__sum']
+        report['sum_ip_related_price'] = aggregate_data['ip_related_price__sum']
+        report['sum_royalties_owed'] = float(aggregate_data['ip_related_price__sum']) * ROYALTY_PERCENTAGE
 
         by_type = Transaction.objects.values('transaction_type').annotate(
-            total=Sum('ip_related_price')).order_by('transaction_type')
+            sum_total_price=Sum('total_price'),
+            sum_ip_related_price=Sum('ip_related_price'),
+            sum_number_of_reactions=Sum('number_of_reactions'),
+            average_total_price_per_reaction=ExpressionWrapper(
+                Sum('total_price') / Sum('number_of_reactions'),
+                output_field=MoneyField(
+                    decimal_places=2, default_currency='USD', max_digits=8)),
+            sum_royalties_owed=ExpressionWrapper(
+                Sum('ip_related_price') * ROYALTY_PERCENTAGE,output_field=MoneyField(
+                    decimal_places=2, default_currency='USD', max_digits=8)),
+        ).order_by('transaction_type')
         by_type = sorted(
-            by_type, key=lambda x: int(-1 * x['total']))
+            by_type, key=lambda x: int(-1 * x['sum_total_price']))
 
         report['by_type'] = by_type
 
