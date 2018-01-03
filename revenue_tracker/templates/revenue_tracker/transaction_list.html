@@ -14,6 +14,7 @@
     </div>
 
     {% include "revenue_tracker/_transaction_summary_panel.html" with panel_type="info" report_list=report.by_type anchor="transaction-summary" panel_title="" %}
+    {% include "revenue_tracker/_transaction_panel.html" with panel_type="primary" transaction_list=transaction_list transaction_type="all" anchor="all-transactions" panel_title="" %}
 
   </div>
 
