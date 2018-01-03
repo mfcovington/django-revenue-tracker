@@ -1,7 +1,3 @@
-table tfoot {
-  border-top: double lightgray;
-}
-
 /**********/
 /* Panels */
 /**********/
@@ -25,4 +21,16 @@ table tfoot {
 
 .panel-footer.panel-warning {
   background-color: #fcf8e3;
+}
+
+/***********/
+/* Tables */
+/***********/
+
+table tfoot {
+  border-top: double lightgray;
+}
+
+th, tr {
+  text-align: center;
 }
