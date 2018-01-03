@@ -4,8 +4,6 @@
   <td>
     {% if item.transaction_type %}
       {{ item.transaction_type|get_verbose_transaction_type }}
-    {% else %}
-      All Types
     {% endif %}
   </td>
   <td>${{ item.sum_total_price|intcomma }}</td>
