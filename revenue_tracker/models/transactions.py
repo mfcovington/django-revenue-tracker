@@ -5,6 +5,8 @@ from django.db.models import Count, F, ExpressionWrapper, Sum
 
 from djmoney.models.fields import MoneyField
 
+from ..models import Customer
+
 
 ROYALTY_PERCENTAGE = 0.025 # import from settings (for first 1 million. After that, 2.75%)
 
@@ -80,6 +82,12 @@ class RoyaltiesManager(models.Manager):
         report['sum_ip_related_price'] = aggregate_data['ip_related_price__sum']
         report['sum_royalties_owed'] = float(aggregate_data['ip_related_price__sum']) * ROYALTY_PERCENTAGE
 
+        customers = Customer.objects.annotate(tx_count=Count('transaction__date', distinct=True)).filter(tx_count__gt=0)
+        repeat_customers = customers.filter(tx_count__gt=1)
+        report['customer_count'] = customers.count()
+        report['repeat_customer_count'] = repeat_customers.count()
+        report['repeat_customer_pct'] = repeat_customers.count() / customers.count()
+
         by_type = Transaction.objects.values('transaction_type').annotate(
             sum_total_price=Sum('total_price'),
             sum_ip_related_price=Sum('ip_related_price'),
@@ -94,6 +102,14 @@ class RoyaltiesManager(models.Manager):
         ).order_by('transaction_type')
         by_type = sorted(
             by_type, key=lambda x: int(-1 * x['sum_total_price']))
+
+        for subreport in by_type:
+            t_type = subreport['transaction_type']
+            customers_by_type = customers.filter(transaction__transaction_type=t_type)
+            repeat_customers_by_type = repeat_customers.filter(transaction__transaction_type=t_type)
+            subreport['customer_count'] = customers_by_type.count()
+            subreport['repeat_customer_count'] = repeat_customers_by_type.count()
+            subreport['repeat_customer_pct'] = repeat_customers_by_type.count() / customers_by_type.count()
 
         report['by_type'] = by_type
 

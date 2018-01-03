@@ -6,6 +6,7 @@
       {{ item.transaction_type|get_verbose_transaction_type }}
     {% endif %}
   </td>
+  <td>{{ item.customer_count }} ({% widthratio item.repeat_customer_pct 1 100 %}%)</td>
   <td>${{ item.sum_total_price|intcomma }}</td>
   <td>{{ item.sum_number_of_reactions|intcomma }}</td>
   <td>${{ item.average_total_price_per_reaction|floatformat:2|intcomma }}</td>
