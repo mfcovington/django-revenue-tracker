@@ -1,5 +1,3 @@
-{% load get_verbose_transaction_type humanize %}
-
 <a name="{{ anchor }}"></a>
 <div class="panel panel-{{ panel_type }}">
 
@@ -19,17 +17,15 @@
       </tr>
     </thead>
     <tbody>
-      {% for report in report_list %}
-        <tr>
-          <td>{{ report.transaction_type|get_verbose_transaction_type }}</td>
-          <td>${{ report.sum_total_price|intcomma }}</td>
-          <td>{{ report.sum_number_of_reactions|intcomma }}</td>
-          <td>${{ report.average_total_price_per_reaction|intcomma }}</td>
-          <td>${{ report.sum_ip_related_price|intcomma }}</td>
-          <td>${{ report.sum_royalties_owed|intcomma }}</td>
-        </tr>
+      {% for subreport in report_list %}
+        {% include "revenue_tracker/_transaction_summary_panel_item.html" with item=subreport %}
       {% endfor %}
     </tbody>
+    {% if report_list|length > 1 %}
+      <tfoot>
+        {% include "revenue_tracker/_transaction_summary_panel_item.html" with item=report %}
+      </tfoot>
+    {% endif %}
   </table>
 
   <a href="#{{ anchor }}">
