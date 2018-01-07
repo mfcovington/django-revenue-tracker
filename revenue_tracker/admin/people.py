@@ -67,10 +67,12 @@ class InstitutionAdmin(admin.ModelAdmin):
     list_filter = [
         'institution_type',
         'country',
-        'website',
     ]
     save_on_top = True
-    search_fields = ['name']
+    search_fields = [
+        'name',
+        'website',
+    ]
 
 
 @admin.register(Vendor)
