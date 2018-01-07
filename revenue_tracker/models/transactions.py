@@ -64,9 +64,20 @@ class RoyaltiesManager(models.Manager):
     # Adapted from:
     # https://github.com/barmassimo/Expense-Tracker/blob/master/src/expenses/models.py
 
-    def get_royalties_report(self):
+    def get_royalties_report(self, from_date=None, to_date=None):
 
-        aggregate_data = Transaction.objects.aggregate(
+        c_kwargs = {}
+        t_kwargs = {}
+        if from_date is not None:
+            t_kwargs['date_fulfilled__gte'] = from_date
+            c_kwargs['transaction__date_fulfilled__gte'] = from_date
+        if to_date is not None:
+            t_kwargs['date_fulfilled__lte'] = to_date
+            c_kwargs['transaction__date_fulfilled__lte'] = to_date
+
+        transactions_by_date = Transaction.objects.filter(**t_kwargs)
+
+        aggregate_data = transactions_by_date.aggregate(
             Sum('total_price'), Sum('number_of_reactions'),
             Sum('ip_related_price'), Count('pk'))
 
@@ -82,13 +93,15 @@ class RoyaltiesManager(models.Manager):
         report['sum_ip_related_price'] = aggregate_data['ip_related_price__sum']
         report['sum_royalties_owed'] = float(aggregate_data['ip_related_price__sum']) * ROYALTY_PERCENTAGE
 
-        customers = Customer.objects.annotate(tx_count=Count('transaction__date', distinct=True)).filter(tx_count__gt=0)
+        customers = Customer.objects.annotate(
+            tx_count=Count('transaction__date', distinct=True)
+        ).filter(tx_count__gt=0, **c_kwargs)
         repeat_customers = customers.filter(tx_count__gt=1)
         report['customer_count'] = customers.count()
         report['repeat_customer_count'] = repeat_customers.count()
         report['repeat_customer_pct'] = repeat_customers.count() / customers.count()
 
-        by_type = Transaction.objects.values('transaction_type').annotate(
+        by_type = transactions_by_date.values('transaction_type').annotate(
             sum_total_price=Sum('total_price'),
             sum_ip_related_price=Sum('ip_related_price'),
             sum_number_of_reactions=Sum('number_of_reactions'),
