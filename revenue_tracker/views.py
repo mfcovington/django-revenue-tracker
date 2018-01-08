@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Min, Max
 from django.shortcuts import render
 from django.views.generic import ListView
@@ -5,7 +6,7 @@ from django.views.generic import ListView
 from .models import Transaction
 
 
-class TransactionList(ListView):
+class TransactionList(LoginRequiredMixin, ListView):
     context_object_name = 'transaction_list'
     model = Transaction
 
