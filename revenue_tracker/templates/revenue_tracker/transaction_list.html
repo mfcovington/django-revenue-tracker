@@ -11,6 +11,13 @@
     <a name='summary'></a>
     <div class="jumbotron">
       <h1>Transactions</h1>
+      <form method="get">
+        <label for="from_date">From date: </label>
+        <input id="from_date" type="text" name="from_date" value="{{ from_date }}">
+        <label for="to_date">To date: </label>
+        <input id="to_date" type="text" name="to_date" value="{{ to_date }}">
+        <input class="btn-primary" type="submit" value="Filter by Fulfillment Date">
+      </form>
     </div>
 
     {% include "revenue_tracker/_transaction_summary_panel.html" with panel_type="info" report_list=report.by_type anchor="transaction-summary" panel_title="" %}
