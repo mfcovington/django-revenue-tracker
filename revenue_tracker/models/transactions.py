@@ -106,7 +106,7 @@ class RoyaltiesManager(models.Manager):
             sum_ip_related_price=Sum('ip_related_price'),
             sum_number_of_reactions=Sum('number_of_reactions'),
             average_total_price_per_reaction=ExpressionWrapper(
-                Sum('total_price') / Sum('number_of_reactions'),
+                1.0 * Sum('total_price') / Sum('number_of_reactions'),
                 output_field=MoneyField(
                     decimal_places=2, default_currency='USD', max_digits=8)),
             sum_royalties_owed=ExpressionWrapper(
