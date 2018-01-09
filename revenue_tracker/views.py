@@ -33,6 +33,8 @@ class TransactionList(LoginRequiredMixin, ListView):
             to_date=to_date)
         context['from_date'] = str(from_date)
         context['to_date'] = str(to_date)
+        context['unfulfilled_list'] = Transaction.objects.filter(
+            date_fulfilled=None)
         return context
 
     def get_queryset(self):

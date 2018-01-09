@@ -18,11 +18,30 @@
         <input id="to_date" type="text" name="to_date" value="{{ to_date }}">
         <input class="btn-primary" type="submit" value="Filter by Fulfillment Date">
       </form>
+      <br>
+      <button class="button btn-info" id="toggle-in-progress">Show Current Transactions</button>
     </div>
 
+    <div id="in-progress" style="display: none;">
+      {% include "revenue_tracker/_transaction_panel.html" with panel_type="danger" transaction_list=unfulfilled_list transaction_type="all" anchor="all-transactions" panel_title="" %}
+    </div>
     {% include "revenue_tracker/_transaction_summary_panel.html" with panel_type="info" report_list=report.by_type anchor="transaction-summary" panel_title="" %}
     {% include "revenue_tracker/_transaction_panel.html" with panel_type="primary" transaction_list=transaction_list transaction_type="all" anchor="all-transactions" panel_title="" %}
 
   </div>
 
 {% endblock %}
+
+{% block footer %}
+  <script type="text/javascript">
+    $(document).ready(function(){
+      $('#toggle-in-progress').on('click', function(event) {
+        $('#in-progress').toggle();
+        var text = $('#toggle-in-progress').text();
+        $('#toggle-in-progress').text(
+          text == "Show Current Transactions" ? "Hide Current Transactions" : "Show Current Transactions");
+      });
+    });
+
+  </script>
+{% endblock footer %}

@@ -37,7 +37,7 @@
           {% endif %}
         ">
           <td>{{ transaction.date }}</td>
-          <td>{{ transaction.date_fulfilled }}</td>
+          <td>{{ transaction.date_fulfilled|default:"-" }}</td>
           <td>
             {% if transaction.customer.website %}
               <a href="{{ transaction.customer.website }}" target="_blank">{{ transaction.customer }}</a>
