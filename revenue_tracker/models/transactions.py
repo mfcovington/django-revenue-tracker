@@ -203,4 +203,7 @@ class Transaction(models.Model):
 
     @property
     def price_per_sample(self):
-        return self.total_price / self.number_of_reactions
+        if self.number_of_reactions == 0:
+            return "-"
+        else:
+            return self.total_price / self.number_of_reactions
