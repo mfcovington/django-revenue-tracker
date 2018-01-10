@@ -10,3 +10,8 @@ $( function() {
   $( "input[name='from_date']" ).datepicker(dateConfig);
   $( "input[name='to_date']" ).datepicker(dateConfig);
 } );
+
+$( "#reset-filter" ).click( function() {
+    $( "#from_date" ).val("");
+    $( "#to_date" ).val("");
+} );
