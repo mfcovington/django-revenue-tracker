@@ -64,16 +64,20 @@ class RoyaltiesManager(models.Manager):
     # Adapted from:
     # https://github.com/barmassimo/Expense-Tracker/blob/master/src/expenses/models.py
 
-    def get_royalties_report(self, from_date=None, to_date=None):
+    def get_royalties_report(self, from_date=None, to_date=None, in_progress_only=False):
 
         c_kwargs = {}
         t_kwargs = {}
-        if from_date is not None:
-            t_kwargs['date_fulfilled__gte'] = from_date
-            c_kwargs['transaction__date_fulfilled__gte'] = from_date
-        if to_date is not None:
-            t_kwargs['date_fulfilled__lte'] = to_date
-            c_kwargs['transaction__date_fulfilled__lte'] = to_date
+        if in_progress_only:
+                t_kwargs['date_fulfilled'] = None
+                c_kwargs['transaction__date_fulfilled'] = None
+        else:
+            if from_date is not None:
+                t_kwargs['date_fulfilled__gte'] = from_date
+                c_kwargs['transaction__date_fulfilled__gte'] = from_date
+            if to_date is not None:
+                t_kwargs['date_fulfilled__lte'] = to_date
+                c_kwargs['transaction__date_fulfilled__lte'] = to_date
 
         transactions_by_date = Transaction.objects.filter(**t_kwargs)
 
