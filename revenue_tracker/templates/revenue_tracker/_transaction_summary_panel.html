@@ -18,13 +18,13 @@
       </tr>
     </thead>
     <tbody>
-      {% for subreport in report_list %}
+      {% for subreport in full_report.by_type %}
         {% include "revenue_tracker/_transaction_summary_panel_item.html" with item=subreport %}
       {% endfor %}
     </tbody>
-    {% if report_list|length > 1 %}
+    {% if full_report.by_type|length > 1 %}
       <tfoot>
-        {% include "revenue_tracker/_transaction_summary_panel_item.html" with item=report %}
+        {% include "revenue_tracker/_transaction_summary_panel_item.html" with item=full_report %}
       </tfoot>
     {% endif %}
   </table>

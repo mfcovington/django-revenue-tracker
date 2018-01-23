@@ -35,6 +35,8 @@ class TransactionList(LoginRequiredMixin, ListView):
         context['to_date'] = str(to_date)
         context['unfulfilled_list'] = Transaction.objects.filter(
             date_fulfilled=None)
+        context['report_unfulfilled'] = Transaction.objects.get_royalties_report(
+            in_progress_only=True)
         return context
 
     def get_queryset(self):
