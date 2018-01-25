@@ -194,6 +194,13 @@ class Transaction(models.Model):
         related_name='transaction'
     )
 
+    description = models.TextField(
+        blank=True,
+    )
+    notes = models.TextField(
+        blank=True,
+    )
+
     objects = RoyaltiesManager()
 
     def __str__(self):

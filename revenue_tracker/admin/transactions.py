@@ -87,6 +87,8 @@ class TransactionAdmin(admin.ModelAdmin):
         'customer__name',
         'customer__institution__name',
         'customer__contact__name',
+        'description',
+        'notes',
         'vendor__name',
         'vendor__contact__name',
     ]
