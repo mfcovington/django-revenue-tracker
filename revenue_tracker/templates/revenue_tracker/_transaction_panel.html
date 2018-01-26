@@ -23,6 +23,7 @@
         <th>Revenue / Sample</th>
         <th>IP-Related Revenue</th>
         <th>Royalties Owed</th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -87,6 +88,10 @@
           <td>{{ transaction.price_per_sample }}</td>
           <td>{{ transaction.ip_related_price }}</td>
           <td>{{ transaction.royalties_owed }}</td>
+          <td>
+            <a href="{% url 'revenue_tracker:transaction_detail' pk=transaction.pk %}"><i class="glyphicon glyphicon-info-sign"></i></a>
+            <a href="{% url 'admin:revenue_tracker_transaction_change' transaction.pk %}" target="_blank"><i class="glyphicon glyphicon-pencil"></i></a>
+          </td>
         </tr>
       {% endfor %}
     </tbody>
