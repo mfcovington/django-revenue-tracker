@@ -122,8 +122,10 @@ class RoyaltiesManager(models.Manager):
 
         for subreport in by_type:
             t_type = subreport['transaction_type']
-            customers_by_type = customers.filter(transaction__transaction_type=t_type)
-            repeat_customers_by_type = repeat_customers.filter(transaction__transaction_type=t_type)
+            customers_by_type = customers.filter(
+                transaction__transaction_type=t_type, **c_kwargs)
+            repeat_customers_by_type = repeat_customers.filter(
+                transaction__transaction_type=t_type, **c_kwargs)
             subreport['customer_count'] = customers_by_type.count()
             subreport['repeat_customer_count'] = repeat_customers_by_type.count()
             subreport['repeat_customer_pct'] = repeat_customers_by_type.count() / customers_by_type.count()
