@@ -9,7 +9,13 @@
   <td>{{ item.customer_count }} ({% widthratio item.repeat_customer_pct 1 100 %}%)</td>
   <td>${{ item.sum_total_price|intcomma }}</td>
   <td>{{ item.sum_number_of_reactions|intcomma }}</td>
-  <td>${{ item.average_total_price_per_reaction|floatformat:2|intcomma }}</td>
+  <td>
+    {% if item.sum_number_of_reactions %}
+      ${{ item.average_total_price_per_reaction|floatformat:2|intcomma }}
+    {% else %}
+      -
+    {% endif %}
+  </td>
   <td>${{ item.sum_ip_related_price|intcomma }}</td>
   <td>${{ item.sum_royalties_owed|floatformat:2|intcomma }}</td>
 </tr>
