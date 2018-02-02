@@ -88,6 +88,14 @@ class Customer(models.Model):
     def institution_type(self):
         return self.institution.institution_type
 
+    @property
+    def is_repeat_customer(self):
+        tx_count = len(set(self.transaction_set.values_list('date')))
+        if tx_count > 1:
+            return True
+        else:
+            return False
+
 
 class Institution(models.Model):
 
