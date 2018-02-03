@@ -1,0 +1,47 @@
+<a name="{{ anchor }}"></a>
+<div class="panel panel-{{ panel_type }}">
+
+  <div class="panel-heading">
+    <h1 class="panel-title"><a href='#summary'>{{ panel_title }}</a></h1>
+  </div>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Customer</th>
+        <th>Contact</th>
+        <th>Type</th>
+        <th>Transaction Count</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for customer in customer_list %}
+        <tr>
+          <td>
+            {% if customer.is_repeat_customer %}
+              <small><i class="glyphicon glyphicon-repeat" data-toggle="tooltip" data-placement="top" title="{{ customer.tx_count }} Transactions"></i></small>
+            {% endif %}
+          </td>
+          <td>
+            <a href="{% url 'revenue_tracker:customer_detail' pk=customer.pk %}">{{ customer }}</a>
+            {% if customer.website %}
+              <a href="{{ customer.website }}"><i class="glyphicon glyphicon-share-alt"></i></a>
+            {% endif %}
+          </td>
+          <td>
+            {{ customer.contact }}
+            <a href="mailto:{{ customer.contact.email }}"><small><i class="glyphicon glyphicon-envelope"></i></small></a>
+          </td>
+          <td>{{ customer.institution_type }}</td>
+          <td>{{ customer.transaction_set.count }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <a href="#{{ anchor }}">
+    <div class="panel-footer panel-{{ panel_type }}"></div>
+  </a>
+
+</div>

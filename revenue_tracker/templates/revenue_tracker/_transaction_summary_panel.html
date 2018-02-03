@@ -9,7 +9,9 @@
     <thead>
       <tr>
         <th>Transaction Type</th>
-        <th>Customers (Repeat)</th>
+        {% if not customer %}
+          <th>Customers (Repeat)</th>
+        {% endif %}
         <th>Total Revenue</th>
         <th>Number of Reactions</th>
         <th>Revenue / Reaction</th>

@@ -8,10 +8,14 @@
   <table class="table">
     <thead>
       <tr>
-        <th></th>
+        {% if not customer %}
+          <th></th>
+        {% endif %}
         <th>Date Ordered</th>
         <th>Date Fulfilled</th>
-        <th>Customer</th>
+        {% if not customer %}
+          <th>Customer</th>
+        {% endif %}
         <th>Vendor</th>
         {% if transaction_type == 'all' %}
           <th>Transaction Type</th>
@@ -38,20 +42,27 @@
             alert-warning
           {% endif %}
         ">
-          <td>
-            {% if transaction.customer.is_repeat_customer %}
-              <small><i class="glyphicon glyphicon-repeat" data-toggle="tooltip" data-placement="top" title="{{ transaction.customer.tx_count }} Transactions"></i></small>
-            {% endif %}
-          </td>
+          {% if not customer %}
+            <td>
+              {% if transaction.customer.is_repeat_customer %}
+                <small><i class="glyphicon glyphicon-repeat" data-toggle="tooltip" data-placement="top" title="{{ transaction.customer.tx_count }} Transactions"></i></small>
+              {% endif %}
+            </td>
+          {% endif %}
           <td>{{ transaction.date }}</td>
           <td>{{ transaction.date_fulfilled|default:"-" }}</td>
-          <td>
-            {% if transaction.customer.website %}
-              <a href="{{ transaction.customer.website }}" target="_blank">{{ transaction.customer }}</a>
-            {% else %}
-              {{ transaction.customer|default:"-" }}
-            {% endif %}
-          </td>
+          {% if not customer %}
+            <td>
+              {% if transaction.customer %}
+                <a href="{% url 'revenue_tracker:customer_detail' pk=transaction.customer.pk %}">{{ transaction.customer }}</a>
+              {% else %}
+                -
+              {% endif %}
+              {% if transaction.customer.website %}
+                <a href="{{ transaction.customer.website }}"><i class="glyphicon glyphicon-share-alt"></i></a>
+              {% endif %}
+            </td>
+          {% endif %}
           <td>
             {% if transaction.vendor.website %}
               <a href="{{ transaction.vendor.website }}" target="_blank">{{ transaction.vendor }}</a>

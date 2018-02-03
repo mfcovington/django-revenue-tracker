@@ -1,0 +1,68 @@
+{% extends "revenue_tracker/base.html" %}
+{% load get_verbose_transaction_type humanize %}
+
+{% block title %}
+  {{ customer }} | {{ block.super }}
+{% endblock %}
+
+{% block content %}
+
+  <div class="container">
+
+    <ul>
+      <li>{{ customer.institution }}</li>
+      <li>{{ customer.name }}</li>
+      <li>{{ customer.contact }}</li>
+      <li>{{ customer.website }}</li>
+      <li>{{ customer.contact_name }}</li>
+      <li>{{ customer.customer }}</li>
+      <li>{{ customer.institution_type }}</li>
+      <li>{{ tx_count }}</li>
+      <li>
+        {% if tx_count > 1 %}
+          Repeat Customer <i class="glyphicon glyphicon-repeat"></i>
+        {% endif %}
+      </li>
+    </ul>
+    <h2>Summary of Transactions</h2>
+    {% if unfulfilled_list %}
+      {% include "revenue_tracker/_transaction_summary_panel.html" with panel_type="danger" full_report=report_unfulfilled anchor="transaction-summary-unfulfilled" panel_title="Unfulfilled Transactions" %}
+    {% endif %}
+    {% include "revenue_tracker/_transaction_summary_panel.html" with panel_type="info" full_report=report anchor="transaction-summary" panel_title="Completed Transactions" %}
+
+    <h2>Transactions</h2>
+    {% if unfulfilled_list %}
+      {% include "revenue_tracker/_transaction_panel.html" with panel_type="danger" transaction_list=unfulfilled_list transaction_type="all" anchor="all-transactions-unfulfilled" panel_title="Unfulfilled Transactions" %}
+    {% endif %}
+    {% include "revenue_tracker/_transaction_panel.html" with panel_type="primary" transaction_list=fulfilled_list transaction_type="all" anchor="all-transactions" panel_title="Completed Transactions" %}
+
+
+    {# <ul class=" #}
+      {# {% if transaction.transaction_type == 'kit' %} #}
+        {# alert-success #}
+      {# {% elif transaction.transaction_type == 'service' %} #}
+        {# alert-info #}
+      {# {% elif transaction.transaction_type == 'other' %} #}
+        {# alert-warning #}
+      {# {% endif %} #}
+    {# "> #}
+      {# <li>{{ transaction.transaction_type|get_verbose_transaction_type }}</li> #}
+      {# <li>{{ transaction.number_of_reactions }}</li> #}
+      {# <li>{{ transaction.customer }}</li> #}
+      {# <li>{{ transaction.vendor }}</li> #}
+      {# <li>{{ transaction.date }}</li> #}
+      {# <li>{{ transaction.total_price }}</li> #}
+      {# <li>{{ transaction.ip_related_price }}</li> #}
+      {# <li>{{ transaction.quote }}</li> #}
+      {# <li>{{ transaction.order }}</li> #}
+      {# <li>{{ transaction.invoice }}</li> #}
+      {# <li>{{ transaction.date_fulfilled }}</li> #}
+      {# <li>{{ transaction.date_paid }}</li> #}
+      {# <li>{{ transaction.description }}</li> #}
+      {# <li>{{ transaction.notes }}</li> #}
+      {# <li><a href="{% url 'admin:revenue_tracker_transaction_change' transaction.pk %}" target="_blank"><i class="glyphicon glyphicon-pencil"></i></a></li> #}
+    {# </ul> #}
+
+  </div>
+
+{% endblock %}

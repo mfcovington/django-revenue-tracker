@@ -1,0 +1,20 @@
+{% extends "revenue_tracker/base.html" %}
+
+{% block title %}
+  Customers | {{ block.super }}
+{% endblock %}
+
+{% block content %}
+
+  <div class="container">
+
+    <a name='summary'></a>
+    <div class="jumbotron">
+      <h1>Customers</h1>
+    </div>
+
+    {% include "revenue_tracker/_customer_panel.html" with panel_type="primary" customer_list=customer_list anchor="all-customers" panel_title="" %}
+
+  </div>
+
+{% endblock %}
