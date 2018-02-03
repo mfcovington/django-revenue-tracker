@@ -8,6 +8,7 @@
   <table class="table">
     <thead>
       <tr>
+        <th></th>
         <th>Date Ordered</th>
         <th>Date Fulfilled</th>
         <th>Customer</th>
@@ -37,6 +38,11 @@
             alert-warning
           {% endif %}
         ">
+          <td>
+            {% if transaction.customer.is_repeat_customer %}
+              <small><i class="glyphicon glyphicon-repeat" data-toggle="tooltip" data-placement="top" title="{{ transaction.customer.tx_count }} Transactions"></i></small>
+            {% endif %}
+          </td>
           <td>{{ transaction.date }}</td>
           <td>{{ transaction.date_fulfilled|default:"-" }}</td>
           <td>
