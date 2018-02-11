@@ -43,7 +43,7 @@ class CustomerAdmin(admin.ModelAdmin):
     ]
     list_filter = [
         'institution__institution_type',
-        'institution__country'
+        'institution__country',
     ]
     save_on_top = True
     search_fields = [

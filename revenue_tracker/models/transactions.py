@@ -185,19 +185,19 @@ class Transaction(models.Model):
         'Quote',
         blank=True,
         null=True,
-        related_name='transaction'
+        related_name='transaction',
     )
     order = models.ForeignKey(
         'Order',
         blank=True,
         null=True,
-        related_name='transaction'
+        related_name='transaction',
     )
     invoice = models.ForeignKey(
         'Invoice',
         blank=True,
         null=True,
-        related_name='transaction'
+        related_name='transaction',
     )
 
     description = models.TextField(
