@@ -44,6 +44,11 @@ class CustomerDetail(LoginRequiredMixin, DetailView):
         context['report_unfulfilled'] = Transaction.objects.get_royalties_report(
             in_progress_only=True,
             customer_id=self.object.pk)
+        context['report_including_unfulfilled'] = Transaction.objects.get_royalties_report(
+            from_date=from_date,
+            to_date=to_date,
+            include_in_progress=True,
+            customer_id=self.object.pk)
         context['tx_count'] = len(set(self.object.transaction_set.values_list('date')))
         return context
 
@@ -87,6 +92,10 @@ class TransactionList(LoginRequiredMixin, ListView):
         context['to_date'] = str(to_date)
         context['unfulfilled_list'] = Transaction.objects.filter(
             date_fulfilled=None)
+        context['report_including_unfulfilled'] = Transaction.objects.get_royalties_report(
+            from_date=from_date,
+            to_date=to_date,
+            include_in_progress=True)
         context['report_unfulfilled'] = Transaction.objects.get_royalties_report(
             in_progress_only=True)
         return context

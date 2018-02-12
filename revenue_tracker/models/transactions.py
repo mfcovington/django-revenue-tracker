@@ -64,7 +64,9 @@ class RoyaltiesManager(models.Manager):
     # Adapted from:
     # https://github.com/barmassimo/Expense-Tracker/blob/master/src/expenses/models.py
 
-    def get_royalties_report(self, from_date=None, to_date=None, in_progress_only=False, customer_id=None):
+    def get_royalties_report(
+        self, from_date=None, to_date=None, in_progress_only=False,
+        customer_id=None, include_in_progress=False):
 
         c_kwargs = {}
         t_kwargs = {}
@@ -79,11 +81,19 @@ class RoyaltiesManager(models.Manager):
                 t_kwargs['date_fulfilled__lte'] = to_date
                 c_kwargs['transaction__date_fulfilled__lte'] = to_date
 
+        cid_c_kwargs = {}
+        cid_t_kwargs = {}
         if customer_id:
-            t_kwargs['customer_id'] = customer_id
-            c_kwargs['id'] = customer_id
+            cid_t_kwargs['customer_id'] = customer_id
+            cid_c_kwargs['id'] = customer_id
 
-        transactions_by_date = Transaction.objects.filter(**t_kwargs)
+        transactions_by_date = Transaction.objects.filter(
+            **t_kwargs, **cid_t_kwargs)
+
+        if include_in_progress:
+            in_progress = Transaction.objects.filter(
+                date_fulfilled__isnull=True, **cid_t_kwargs)
+            transactions_by_date = transactions_by_date | in_progress
 
         aggregate_data = transactions_by_date.aggregate(
             Sum('total_price'), Sum('number_of_reactions'),
@@ -101,10 +111,21 @@ class RoyaltiesManager(models.Manager):
         report['sum_ip_related_price'] = aggregate_data['ip_related_price__sum']
         report['sum_royalties_owed'] = float(aggregate_data['ip_related_price__sum']) * ROYALTY_PERCENTAGE
 
-        customers = Customer.objects.annotate(
-            tx_count=Count('transaction__date', distinct=True)
-        ).filter(tx_count__gt=0, **c_kwargs)
-        repeat_customers = customers.filter(tx_count__gt=1)
+        customers_annotated = Customer.objects.annotate(
+            c_tx_count=Count('transaction__date', distinct=True)
+        )
+        customers = customers_annotated.filter(
+            c_tx_count__gt=0, **c_kwargs, **cid_c_kwargs)
+
+        if include_in_progress:
+            in_progress = Customer.objects.annotate(
+                c_tx_count=Count('transaction__date', distinct=True)
+            ).filter(transaction__date_fulfilled__isnull=True, **cid_c_kwargs)
+            customers = customers | in_progress
+
+        customers = customers.distinct()
+        repeat_customers = customers.filter(c_tx_count__gt=1)
+
         report['customer_count'] = customers.count()
         report['repeat_customer_count'] = repeat_customers.count()
         report['repeat_customer_pct'] = repeat_customers.count() / customers.count()
@@ -127,9 +148,19 @@ class RoyaltiesManager(models.Manager):
         for subreport in by_type:
             t_type = subreport['transaction_type']
             customers_by_type = customers.filter(
-                transaction__transaction_type=t_type, **c_kwargs)
-            repeat_customers_by_type = repeat_customers.filter(
-                transaction__transaction_type=t_type, **c_kwargs)
+                transaction__transaction_type=t_type, **c_kwargs,
+                **cid_c_kwargs)
+
+            if include_in_progress:
+                in_progress = Customer.objects.annotate(
+                    c_tx_count=Count('transaction__date', distinct=True)
+                ).filter(
+                    transaction__transaction_type=t_type,
+                    transaction__date_fulfilled__isnull=True, **cid_c_kwargs)
+                customers_by_type = customers_by_type.distinct() | in_progress.distinct()
+
+            repeat_customers_by_type = customers_by_type.filter(c_tx_count__gt=1)
+
             subreport['customer_count'] = customers_by_type.count()
             subreport['repeat_customer_count'] = repeat_customers_by_type.count()
             subreport['repeat_customer_pct'] = repeat_customers_by_type.count() / customers_by_type.count()
