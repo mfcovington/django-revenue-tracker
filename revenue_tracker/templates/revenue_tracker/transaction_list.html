@@ -26,12 +26,12 @@
     </div>
 
     <div id="in-progress" style="display: none;">
-      {% include "revenue_tracker/_transaction_summary_panel.html" with panel_type="warning" full_report=report_including_unfulfilled anchor="fulfilled-and-unfulfilled-transaction-summary" panel_title="" %}
-      {% include "revenue_tracker/_transaction_summary_panel.html" with panel_type="danger" full_report=report_unfulfilled anchor="unfulfilled-transaction-summary" panel_title="" %}
-      {% include "revenue_tracker/_transaction_panel.html" with panel_type="danger" transaction_list=unfulfilled_list transaction_type="all" anchor="unfulfilled-all-transactions" panel_title="" %}
+      {% include "revenue_tracker/_transaction_summary_panel.html" with panel_type="warning" full_report=report_including_unfulfilled anchor="completed-and-pending-transaction-summary" panel_title="Summary of Completed & Pending Transactions" %}
+      {% include "revenue_tracker/_transaction_summary_panel.html" with panel_type="danger" full_report=report_unfulfilled anchor="pending-transaction-summary" panel_title="Summary of Pending Transactions" %}
+      {% include "revenue_tracker/_transaction_panel.html" with panel_type="danger" transaction_list=unfulfilled_list transaction_type="all" anchor="pending-transactions" panel_title="Pending Transactions" %}
     </div>
-    {% include "revenue_tracker/_transaction_summary_panel.html" with panel_type="info" full_report=report anchor="transaction-summary" panel_title="" %}
-    {% include "revenue_tracker/_transaction_panel.html" with panel_type="primary" transaction_list=transaction_list transaction_type="all" anchor="all-transactions" panel_title="" %}
+    {% include "revenue_tracker/_transaction_summary_panel.html" with panel_type="info" full_report=report anchor="completed-transaction-summary" panel_title="Summary of Completed Transactions" %}
+    {% include "revenue_tracker/_transaction_panel.html" with panel_type="primary" transaction_list=transaction_list transaction_type="all" anchor="completed-transactions" panel_title="Completed Transactions" %}
 
   </div>
 

@@ -24,18 +24,18 @@
         {% endif %}
       </li>
     </ul>
-    <h2>Summary of Transactions</h2>
+    <h2>Transaction Summaries</h2>
     {% if unfulfilled_list %}
-      {% include "revenue_tracker/_transaction_summary_panel.html" with panel_type="warning" full_report=report_including_unfulfilled anchor="completed-and-pending-transaction-summary" panel_title="Completed & Unfulfilled Transactions" %}
-      {% include "revenue_tracker/_transaction_summary_panel.html" with panel_type="danger" full_report=report_unfulfilled anchor="transaction-summary-unfulfilled" panel_title="Unfulfilled Transactions" %}
+      {% include "revenue_tracker/_transaction_summary_panel.html" with panel_type="warning" full_report=report_including_unfulfilled anchor="completed-and-pending-transaction-summary" panel_title="Summary of Completed & Pending Transactions" %}
+      {% include "revenue_tracker/_transaction_summary_panel.html" with panel_type="danger" full_report=report_unfulfilled anchor="pending-transaction-summary" panel_title="Summary of Pending Transactions" %}
     {% endif %}
-    {% include "revenue_tracker/_transaction_summary_panel.html" with panel_type="info" full_report=report anchor="transaction-summary" panel_title="Completed Transactions" %}
+    {% include "revenue_tracker/_transaction_summary_panel.html" with panel_type="info" full_report=report anchor="completed-transaction-summary" panel_title="Summary of Completed Transactions" %}
 
     <h2>Transactions</h2>
     {% if unfulfilled_list %}
-      {% include "revenue_tracker/_transaction_panel.html" with panel_type="danger" transaction_list=unfulfilled_list transaction_type="all" anchor="all-transactions-unfulfilled" panel_title="Unfulfilled Transactions" %}
+      {% include "revenue_tracker/_transaction_panel.html" with panel_type="danger" transaction_list=unfulfilled_list transaction_type="all" anchor="pending-transactions" panel_title="Pending Transactions" %}
     {% endif %}
-    {% include "revenue_tracker/_transaction_panel.html" with panel_type="primary" transaction_list=fulfilled_list transaction_type="all" anchor="all-transactions" panel_title="Completed Transactions" %}
+    {% include "revenue_tracker/_transaction_panel.html" with panel_type="primary" transaction_list=fulfilled_list transaction_type="all" anchor="completed-transactions" panel_title="Completed Transactions" %}
 
 
     {# <ul class=" #}
