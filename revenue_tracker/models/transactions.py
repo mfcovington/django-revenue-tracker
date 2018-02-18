@@ -195,9 +195,18 @@ class RoyaltiesManager(models.Manager):
                 date_fulfilled__isnull=True, **cid_t_kwargs)
             transactions_by_date = transactions_by_date | in_progress
 
-        aggregate_data = transactions_by_date.aggregate(
-            Sum('total_price'), Sum('number_of_reactions'),
-            Sum('ip_related_price'), Count('pk'))
+        aggregate_data = transactions_by_date.annotate(
+            ip_related_gross_price = ExpressionWrapper(
+                F('number_of_reactions') * F('base_ip_related_price_per_reaction'),
+                output_field=MoneyField(
+                    decimal_places=2, default_currency='USD', max_digits=8)),
+        ).aggregate(
+            Sum('total_price'),
+            Sum('number_of_reactions'),
+            Sum('ip_related_price'),
+            Count('pk'),
+            Sum('ip_related_gross_price'),
+        )
 
         if (aggregate_data['pk__count'] == 0):
             return {'total': 0, 'total_per_month': 0}
@@ -209,6 +218,7 @@ class RoyaltiesManager(models.Manager):
         report['sum_number_of_reactions'] = aggregate_data['number_of_reactions__sum']
         report['average_total_price_per_reaction'] = aggregate_data['total_price__sum'] / aggregate_data['number_of_reactions__sum']
         report['sum_ip_related_price'] = aggregate_data['ip_related_price__sum']
+        report['sum_ip_related_gross_price'] = aggregate_data['ip_related_gross_price__sum']
         report['sum_royalties_owed'] = float(aggregate_data['ip_related_price__sum']) * ROYALTY_PERCENTAGE
 
         customers_annotated = Customer.objects.annotate(
@@ -233,6 +243,10 @@ class RoyaltiesManager(models.Manager):
         by_type = transactions_by_date.values('transaction_type').annotate(
             sum_total_price=Sum('total_price'),
             sum_ip_related_price=Sum('ip_related_price'),
+            sum_ip_related_gross_price=ExpressionWrapper(
+                Sum(F('number_of_reactions') * F('base_ip_related_price_per_reaction')),
+                output_field=MoneyField(
+                    decimal_places=2, default_currency='USD', max_digits=8)),
             sum_number_of_reactions=Sum('number_of_reactions'),
             average_total_price_per_reaction=ExpressionWrapper(
                 1.0 * Sum('total_price') / Sum('number_of_reactions'),
