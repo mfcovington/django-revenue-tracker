@@ -382,6 +382,16 @@ class Transaction(models.Model):
                 / (self.ip_related_price + self.ip_related_discount))
 
     @property
+    def ip_related_gross_price(self):
+        if self.base_ip_related_price_per_reaction == 0:
+            return '-'
+        elif self.number_of_reactions == 0:
+            return '-'
+        else:
+            return (self.base_ip_related_price_per_reaction
+                * self.number_of_reactions)
+
+    @property
     def royalties_owed(self):
         return self.ip_related_price * ROYALTY_PERCENTAGE
 

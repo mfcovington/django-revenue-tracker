@@ -26,7 +26,8 @@
         <th>Invoice</th>
         <th>Total Revenue</th>
         <th>Revenue / Sample</th>
-        <th>IP-Related Revenue</th>
+        <th>IP-Related (Net)</th>
+        <th>IP-Related (Gross)</th>
         <th>IP-Related Discount</th>
         <th>Royalties Owed</th>
         <th></th>
@@ -105,6 +106,7 @@
           <td>{{ transaction.total_price }}</td>
           <td>{{ transaction.price_per_sample }}</td>
           <td>{{ transaction.ip_related_price }}</td>
+          <td>{{ transaction.ip_related_gross_price }}</td>
           <td>{{ transaction.ip_related_discount }} ({% widthratio transaction.ip_related_discount_pct 1 100 %}%)</td>
           <td>{{ transaction.royalties_owed }}</td>
           <td>
