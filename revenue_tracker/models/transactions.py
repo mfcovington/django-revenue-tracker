@@ -363,6 +363,25 @@ class Transaction(models.Model):
         super().save(*args, **kwargs)
 
     @property
+    def ip_related_discount(self):
+        if self.base_ip_related_price_per_reaction == 0:
+            return '-'
+        else:
+            return (self.base_ip_related_price_per_reaction
+                * self.number_of_reactions
+                - self.ip_related_price)
+
+    @property
+    def ip_related_discount_pct(self):
+        if self.base_ip_related_price_per_reaction == 0:
+            return '-'
+        elif self.number_of_reactions == 0:
+            return '-'
+        else:
+            return (self.ip_related_discount
+                / (self.ip_related_price + self.ip_related_discount))
+
+    @property
     def royalties_owed(self):
         return self.ip_related_price * ROYALTY_PERCENTAGE
 

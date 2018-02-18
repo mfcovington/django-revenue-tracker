@@ -27,6 +27,7 @@
         <th>Total Revenue</th>
         <th>Revenue / Sample</th>
         <th>IP-Related Revenue</th>
+        <th>IP-Related Discount</th>
         <th>Royalties Owed</th>
         <th></th>
       </tr>
@@ -104,6 +105,7 @@
           <td>{{ transaction.total_price }}</td>
           <td>{{ transaction.price_per_sample }}</td>
           <td>{{ transaction.ip_related_price }}</td>
+          <td>{{ transaction.ip_related_discount }} ({% widthratio transaction.ip_related_discount_pct 1 100 %}%)</td>
           <td>{{ transaction.royalties_owed }}</td>
           <td>
             <a href="{% url 'revenue_tracker:transaction_detail' pk=transaction.pk %}"><i class="glyphicon glyphicon-info-sign"></i></a>
