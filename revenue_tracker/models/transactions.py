@@ -18,6 +18,27 @@ TRANSACTION_TYPE_CHOICES = [
 ]
 
 
+class BasePrice(models.Model):
+
+    class Meta:
+        ordering = ['start_date', 'transaction_type']
+
+    start_date = models.DateField()
+    transaction_type = models.CharField(
+        choices=TRANSACTION_TYPE_CHOICES,
+        max_length=7,
+    )
+    price_per_reaction = MoneyField(
+        decimal_places=2,
+        default_currency='USD',
+        max_digits=8,
+    )
+
+    def __str__(self):
+        return '{} ({}: {}/rxn)'.format(
+            self.start_date, self.transaction_type, self.price_per_reaction)
+
+
 def transaction_doc_path(instance, filename):
     return '{}/{}'.format(instance.doc_type, filename)
 

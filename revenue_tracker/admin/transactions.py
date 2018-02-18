@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from ..models import Invoice, Order, Quote, Transaction
+from ..models import BasePrice, Invoice, Order, Quote, Transaction
 
 
 class FulfillmentStatusFilter(admin.SimpleListFilter):
@@ -45,6 +45,11 @@ class PaymentStatusFilter(admin.SimpleListFilter):
 
 class TransactionInline(admin.StackedInline):
     model = Transaction
+
+
+@admin.register(BasePrice)
+class BasePriceAdmin(admin.ModelAdmin):
+    save_on_top = True
 
 
 @admin.register(Quote)
