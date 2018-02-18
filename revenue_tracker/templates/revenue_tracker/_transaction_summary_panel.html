@@ -7,17 +7,7 @@
 
   <table class="table">
     <thead>
-      <tr>
-        <th>Transaction Type</th>
-        {% if not customer %}
-          <th>Customers (Repeat)</th>
-        {% endif %}
-        <th>Total Revenue</th>
-        <th>Number of Reactions</th>
-        <th>Revenue / Reaction</th>
-        <th>IP-Related Revenue</th>
-        <th>Royalties Owed</th>
-      </tr>
+      {% include "revenue_tracker/_transaction_summary_panel_header_row.html" %}
     </thead>
     <tbody>
       {% for subreport in full_report.by_type %}
