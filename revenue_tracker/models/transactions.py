@@ -1,4 +1,5 @@
 import os
+import datetime
 
 from django.db import models
 from django.db.models import Count, F, ExpressionWrapper, Sum
@@ -37,6 +38,21 @@ class BasePrice(models.Model):
     def __str__(self):
         return '{} ({}: {}/rxn)'.format(
             self.start_date, self.transaction_type, self.price_per_reaction)
+
+
+def get_base_price_per_period(transaction_type):
+    base_prices = []
+    end_date = None
+    for kp in BasePrice.objects.filter(transaction_type=transaction_type).order_by('-start_date'):
+        start_date = kp.start_date
+        price_per_reaction = kp.price_per_reaction
+        if end_date:
+            period_price = [start_date, end_date, price_per_reaction]
+        else:
+            period_price = [start_date, datetime.date.today(), price_per_reaction]
+        base_prices.append(period_price)
+        end_date = start_date - datetime.timedelta(days=1)
+    return base_prices
 
 
 def transaction_doc_path(instance, filename):
@@ -224,6 +240,13 @@ class Transaction(models.Model):
         max_digits=8,
         verbose_name='IP-related price'
     )
+    base_ip_related_price_per_reaction = MoneyField(
+        blank=True,
+        decimal_places=2,
+        default_currency='USD',
+        max_digits=5,
+        verbose_name='Base IP-related price per reaction',
+    )
     date = models.DateField()
     date_fulfilled = models.DateField(
         blank=True,
@@ -265,6 +288,16 @@ class Transaction(models.Model):
         return '{} - {} - {} - {}'.format(
             self.date, self.customer, self.transaction_type,
             self.number_of_reactions)
+
+    def save(self, *args, **kwargs):
+        for base_price_data in get_base_price_per_period(self.transaction_type):
+            start_date = base_price_data[0]
+            end_date = base_price_data[1]
+            price = base_price_data[2]
+            if start_date <= self.date <= end_date:
+                self.base_ip_related_price_per_reaction = price
+                break
+        super().save(*args, **kwargs)
 
     @property
     def royalties_owed(self):

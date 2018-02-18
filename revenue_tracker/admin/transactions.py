@@ -79,6 +79,7 @@ class TransactionAdmin(admin.ModelAdmin):
         'date_paid',
         'total_price',
         'price_per_sample',
+        'base_ip_related_price_per_reaction',
         'ip_related_price',
         'royalties_owed',
     ]
@@ -87,6 +88,7 @@ class TransactionAdmin(admin.ModelAdmin):
         FulfillmentStatusFilter,
         PaymentStatusFilter,
     ]
+    readonly_fields = ['base_ip_related_price_per_reaction']
     save_on_top = True
     search_fields = [
         'customer__name',
