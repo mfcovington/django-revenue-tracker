@@ -31,6 +31,7 @@ class BasePrice(models.Model):
 
     class Meta:
         ordering = ['start_date', 'transaction_type']
+        unique_together = ['start_date', 'transaction_type']
 
     objects = BasePriceQuerySet.as_manager()
 
