@@ -39,6 +39,22 @@ class BasePrice(models.Model):
         return '{} ({}: {}/rxn)'.format(
             self.start_date, self.transaction_type, self.price_per_reaction)
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        start_date = self.start_date
+        next_price_period = BasePrice.objects.filter(
+            transaction_type=self.transaction_type, start_date__gt=start_date
+        ).order_by('start_date').first()
+        if next_price_period:
+            end_date = next_price_period.start_date - datetime.timedelta(days=1)
+        else:
+            end_date = datetime.date.today()
+        Transaction.objects.filter(
+            transaction_type=self.transaction_type,
+            date__gte=start_date,
+            date__lte=end_date,
+        ).update(base_ip_related_price_per_reaction=self.price_per_reaction)
+
 
 def get_base_price_per_period(transaction_type):
     base_prices = []
