@@ -200,12 +200,17 @@ class RoyaltiesManager(models.Manager):
                 F('number_of_reactions') * F('base_ip_related_price_per_reaction'),
                 output_field=MoneyField(
                     decimal_places=2, default_currency='USD', max_digits=8)),
+            ip_related_discount = ExpressionWrapper(
+                F('number_of_reactions') * F('base_ip_related_price_per_reaction') - F('ip_related_price'),
+                output_field=MoneyField(
+                    decimal_places=2, default_currency='USD', max_digits=8)),
         ).aggregate(
             Sum('total_price'),
             Sum('number_of_reactions'),
             Sum('ip_related_price'),
             Count('pk'),
             Sum('ip_related_gross_price'),
+            Sum('ip_related_discount'),
         )
 
         if (aggregate_data['pk__count'] == 0):
@@ -219,6 +224,10 @@ class RoyaltiesManager(models.Manager):
         report['average_total_price_per_reaction'] = aggregate_data['total_price__sum'] / aggregate_data['number_of_reactions__sum']
         report['sum_ip_related_price'] = aggregate_data['ip_related_price__sum']
         report['sum_ip_related_gross_price'] = aggregate_data['ip_related_gross_price__sum']
+        report['sum_ip_related_discount'] = aggregate_data['ip_related_discount__sum']
+        report['sum_ip_related_discount_pct'] = (
+            aggregate_data['ip_related_discount__sum']
+            / aggregate_data['ip_related_gross_price__sum'])
         report['sum_royalties_owed'] = float(aggregate_data['ip_related_price__sum']) * ROYALTY_PERCENTAGE
 
         customers_annotated = Customer.objects.annotate(
@@ -247,6 +256,23 @@ class RoyaltiesManager(models.Manager):
                 Sum(F('number_of_reactions') * F('base_ip_related_price_per_reaction')),
                 output_field=MoneyField(
                     decimal_places=2, default_currency='USD', max_digits=8)),
+            sum_ip_related_discount = ExpressionWrapper(
+                Sum(
+                    F('number_of_reactions')
+                    * F('base_ip_related_price_per_reaction')
+                    - F('ip_related_price')),
+                output_field=MoneyField(
+                    decimal_places=2, default_currency='USD', max_digits=8)),
+            sum_ip_related_discount_pct = ExpressionWrapper(
+                float(1)
+                * (Sum(
+                    F('number_of_reactions')
+                    * F('base_ip_related_price_per_reaction')
+                    - F('ip_related_price')))
+                / (Sum(
+                    F('number_of_reactions')
+                    * F('base_ip_related_price_per_reaction'))),
+                output_field=models.FloatField()),
             sum_number_of_reactions=Sum('number_of_reactions'),
             average_total_price_per_reaction=ExpressionWrapper(
                 1.0 * Sum('total_price') / Sum('number_of_reactions'),
