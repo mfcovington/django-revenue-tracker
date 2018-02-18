@@ -5,16 +5,18 @@
     <h1 class="panel-title"><a href='#summary'>{{ panel_title }}</a></h1>
   </div>
 
-  <table class="table">
-    <thead>
-      {% include "revenue_tracker/_transaction_panel_header_row.html" %}
-    </thead>
-    <tbody>
-      {% for transaction in transaction_list %}
-        {% include "revenue_tracker/_transaction_panel_item.html" %}
-      {% endfor %}
-    </tbody>
-  </table>
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        {% include "revenue_tracker/_transaction_panel_header_row.html" %}
+      </thead>
+      <tbody>
+        {% for transaction in transaction_list %}
+          {% include "revenue_tracker/_transaction_panel_item.html" %}
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 
   <a href="#{{ anchor }}">
     <div class="panel-footer panel-{{ panel_type }}"></div>
