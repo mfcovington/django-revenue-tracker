@@ -19,10 +19,20 @@ TRANSACTION_TYPE_CHOICES = [
 ]
 
 
+class BasePriceQuerySet(models.QuerySet):
+
+    def delete(self, *args, **kwargs):
+        for obj in self:
+            obj.delete()
+        super(BasePriceQuerySet, self).delete(*args, **kwargs)
+
+
 class BasePrice(models.Model):
 
     class Meta:
         ordering = ['start_date', 'transaction_type']
+
+    objects = BasePriceQuerySet.as_manager()
 
     start_date = models.DateField()
     transaction_type = models.CharField(
@@ -38,6 +48,42 @@ class BasePrice(models.Model):
     def __str__(self):
         return '{} ({}: {}/rxn)'.format(
             self.start_date, self.transaction_type, self.price_per_reaction)
+
+    def delete(self, *args, **kwargs):
+        start_date = self.start_date
+        transaction_type = self.transaction_type
+
+        sorted_price_periods = BasePrice.objects.filter(
+            transaction_type=transaction_type
+        ).annotate(
+            relevance=models.Case(
+                models.When(start_date__gt=start_date, then=1),
+                models.When(start_date__lt=start_date, then=2),
+                output_field=models.IntegerField(),
+            )
+        ).order_by('relevance', 'start_date')
+        previous_price_period = sorted_price_periods.filter(relevance=2).last()
+        next_price_period = sorted_price_periods.filter(relevance=1).first()
+
+
+        if next_price_period:
+            end_date = next_price_period.start_date - datetime.timedelta(days=1)
+        else:
+            end_date = datetime.date.today()
+
+        if previous_price_period:
+            Transaction.objects.filter(
+                transaction_type=transaction_type,
+                date__gte=previous_price_period.start_date,
+                date__lte=end_date,
+            ).update(base_ip_related_price_per_reaction=previous_price_period.price_per_reaction)
+        else:
+            Transaction.objects.filter(
+                transaction_type=transaction_type,
+                date__lte=end_date,
+            ).update(base_ip_related_price_per_reaction=0)
+
+        super().delete(*args, **kwargs)
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
