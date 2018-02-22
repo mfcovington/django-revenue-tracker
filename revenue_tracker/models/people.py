@@ -101,6 +101,11 @@ class Customer(models.Model):
             sum(self.transaction_set.values_list('number_of_reactions'), ()))
 
     @property
+    def total_revenue(self):
+        return sum(
+            sum(self.transaction_set.values_list('total_price'), ()))
+
+    @property
     def tx_count(self):
         return len(set(self.transaction_set.values_list('date')))
 
