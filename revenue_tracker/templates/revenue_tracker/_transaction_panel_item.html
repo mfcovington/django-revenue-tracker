@@ -10,7 +10,7 @@
   {% if not customer %}
     <td>
       {% if transaction.customer.is_repeat_customer %}
-        <small><i class="glyphicon glyphicon-repeat" data-toggle="tooltip" data-placement="top" title="{{ transaction.customer.tx_count }} Transactions"></i></small>
+        <small><i class="glyphicon glyphicon-repeat" data-toggle="tooltip" data-placement="top" title="{{ transaction.customer.tx_count }} Transactions<br>{{transaction.customer.reaction_count }} Reactions"></i></small>
       {% endif %}
     </td>
   {% endif %}

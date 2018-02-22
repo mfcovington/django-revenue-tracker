@@ -96,6 +96,11 @@ class Customer(models.Model):
             return False
 
     @property
+    def reaction_count(self):
+        return sum(
+            sum(self.transaction_set.values_list('number_of_reactions'), ()))
+
+    @property
     def tx_count(self):
         return len(set(self.transaction_set.values_list('date')))
 
