@@ -37,6 +37,11 @@
         <label for="to_date">To date: </label>
         <input id="to_date" type="text" name="to_date" value="{{ to_date }}">
         <div class="btn-group">
+          <button id="last-365" class="btn btn-default" onclick="set_date_range_since(days=365)"><small>-365</small></button>
+          <button id="last-90" class="btn btn-default" onclick="set_date_range_since(days=90)"><small>-90</small></button>
+          <button id="last-30" class="btn btn-default" onclick="set_date_range_since(days=30)"><small>-30</small></button>
+        </div>
+        <div class="btn-group">
           <input class="btn btn-primary" type="submit" value="Filter by Fulfillment Date">
           <button id="reset-filter" class="btn btn-danger" type="submit"><small><span class="glyphicon glyphicon-remove"></span></small></button>
         </div>
@@ -86,6 +91,13 @@
 
     function filter_by_period(year, quarter="") {
          location.href = {% url 'revenue_tracker:transaction_list' %} + "?year=" + year + "&quarter=" + quarter;
+    }
+
+    function set_date_range_since(days) {
+      var now_minus_days = Date.now() + (-days * 24 * 3600 * 1000);
+      var now = Date.now();
+      $( "#from_date" ).val(new Date(now_minus_days).toISOString().substr(0, 10));
+      $( "#to_date" ).val(new Date(now).toISOString().substr(0, 10));
     }
   </script>
 {% endblock footer %}
