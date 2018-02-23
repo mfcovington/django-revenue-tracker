@@ -68,16 +68,38 @@ class TransactionList(LoginRequiredMixin, ListView):
     model = Transaction
 
     def _transaction_date_range(self):
-        dates_fulfilled = Transaction.objects.values('date_fulfilled').aggregate(
-            Min('date_fulfilled'), Max('date_fulfilled'))
-        from_date = self.request.GET.get(
-            'from_date', dates_fulfilled['date_fulfilled__min'])
-        to_date = self.request.GET.get(
-            'to_date', dates_fulfilled['date_fulfilled__max'])
-        if from_date == '':
-            from_date = dates_fulfilled['date_fulfilled__min']
-        if to_date == '':
-            to_date = dates_fulfilled['date_fulfilled__max']
+
+        quarters = {
+            'Q1': ['01-01', '03-31'],
+            'Q2': ['04-01', '06-30'],
+            'Q3': ['07-01', '09-30'],
+            'Q4': ['10-01', '12-31'],
+        }
+
+        year = self.request.GET.get('year', None)
+        quarter = self.request.GET.get('quarter', None)
+
+        if year:
+            if quarter:
+                period = quarters[quarter]
+            else:
+                period = ['01-01', '12-31']
+
+            from_date='{}-{}'.format(year, period[0])
+            to_date='{}-{}'.format(year, period[1])
+
+        else:
+            dates_fulfilled = Transaction.objects.values('date_fulfilled').aggregate(
+                Min('date_fulfilled'), Max('date_fulfilled'))
+            from_date = self.request.GET.get(
+                'from_date', dates_fulfilled['date_fulfilled__min'])
+            to_date = self.request.GET.get(
+                'to_date', dates_fulfilled['date_fulfilled__max'])
+            if from_date == '':
+                from_date = dates_fulfilled['date_fulfilled__min']
+            if to_date == '':
+                to_date = dates_fulfilled['date_fulfilled__max']
+
         return [from_date, to_date]
 
     def get_context_data(self, **kwargs):
@@ -85,6 +107,8 @@ class TransactionList(LoginRequiredMixin, ListView):
         transaction_date_range = self._transaction_date_range()
         from_date=transaction_date_range[0]
         to_date=transaction_date_range[1]
+        context['year'] = self.request.GET.get('year', None)
+        context['quarter'] = self.request.GET.get('quarter', None)
         context['report'] = Transaction.objects.get_royalties_report(
             from_date=from_date,
             to_date=to_date)

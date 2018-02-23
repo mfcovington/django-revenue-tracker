@@ -164,6 +164,25 @@ class RoyaltiesManager(models.Manager):
     # Adapted from:
     # https://github.com/barmassimo/Expense-Tracker/blob/master/src/expenses/models.py
 
+    def get_period_report(self, year, quarter=None, **kwargs):
+
+        quarters = {
+            'Q1': ['01-01', '03-31'],
+            'Q2': ['04-01', '06-30'],
+            'Q3': ['07-01', '09-30'],
+            'Q4': ['10-01', '12-31'],
+        }
+
+        if quarter:
+            period = quarters[quarter]
+        else:
+            period = ['01-01', '12-31']
+
+        return self.get_royalties_report(
+            from_date='{}-{}'.format(year, period[0]),
+            to_date='{}-{}'.format(year, period[1]),
+            **kwargs)
+
     def get_royalties_report(
         self, from_date=None, to_date=None, in_progress_only=False,
         customer_id=None, include_in_progress=False):

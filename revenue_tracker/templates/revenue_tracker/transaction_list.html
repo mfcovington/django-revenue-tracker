@@ -11,6 +11,26 @@
     <a name='summary'></a>
     <div class="jumbotron">
       <h1>Transaction Report</h1>
+      <div class="well">
+        <div class="btn-group">
+          <button class="btn btn-lg btn-success" id="2016" onclick="filter_by_period(year=2016)">2016</button>
+          <button class="btn btn-lg btn-default" id="2016-Q1" onclick="filter_by_period(year=2016, quarter='Q1')">Q1</button>
+          <button class="btn btn-lg btn-default" id="2016-Q2" onclick="filter_by_period(year=2016, quarter='Q2')">Q2</button>
+          <button class="btn btn-lg btn-default" id="2016-Q3" onclick="filter_by_period(year=2016, quarter='Q3')">Q3</button>
+          <button class="btn btn-lg btn-default" id="2016-Q4" onclick="filter_by_period(year=2016, quarter='Q4')">Q4</button>
+        </div>
+        <div class="btn-group">
+          <button class="btn btn-lg btn-success" id="2017" onclick="filter_by_period(year=2017)">2017</button>
+          <button class="btn btn-lg btn-default" id="2017-Q1" onclick="filter_by_period(year=2017, quarter='Q1')">Q1</button>
+          <button class="btn btn-lg btn-default" id="2017-Q2" onclick="filter_by_period(year=2017, quarter='Q2')">Q2</button>
+          <button class="btn btn-lg btn-default" id="2017-Q3" onclick="filter_by_period(year=2017, quarter='Q3')">Q3</button>
+          <button class="btn btn-lg btn-default" id="2017-Q4" onclick="filter_by_period(year=2017, quarter='Q4')">Q4</button>
+        </div>
+        <div class="btn-group">
+          <button class="btn btn-lg btn-success" id="2018" onclick="filter_by_period(year=2018)">2018</button>
+          <button class="btn btn-lg btn-default" id="2018-Q1" onclick="filter_by_period(year=2018, quarter='Q1')">Q1</button>
+        </div>
+      </div>
       <form method="get">
         <label for="from_date">From date: </label>
         <input id="from_date" type="text" name="from_date" value="{{ from_date }}">
@@ -50,7 +70,22 @@
         $('#toggle-in-progress').text(
           text == "Show Pending Transactions" ? "Hide Pending Transactions" : "Show Pending Transactions");
       });
+
+      if ({{ year }}) {
+        $('#{{ year }}').addClass('active');
+        if ('{{ quarter }}') {
+          $('#{{ year }}-{{ quarter }}').addClass('active');
+        } else {
+          $('#{{ year }}-Q1').addClass('active');
+          $('#{{ year }}-Q2').addClass('active');
+          $('#{{ year }}-Q3').addClass('active');
+          $('#{{ year }}-Q4').addClass('active');
+        }
+      }
     });
 
+    function filter_by_period(year, quarter="") {
+         location.href = {% url 'revenue_tracker:transaction_list' %} + "?year=" + year + "&quarter=" + quarter;
+    }
   </script>
 {% endblock footer %}
