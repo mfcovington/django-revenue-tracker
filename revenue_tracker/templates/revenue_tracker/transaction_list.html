@@ -76,7 +76,7 @@
           text == "Show Pending Transactions" ? "Hide Pending Transactions" : "Show Pending Transactions");
       });
 
-      if ({{ year }}) {
+      if ('{{ year }}') {
         $('#{{ year }}').addClass('active');
         if ('{{ quarter }}') {
           $('#{{ year }}-{{ quarter }}').addClass('active');
