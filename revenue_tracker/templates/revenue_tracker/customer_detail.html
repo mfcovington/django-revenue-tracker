@@ -20,7 +20,8 @@
       <li>{{ tx_count }}</li>
       <li>
         {% if tx_count > 1 %}
-          Repeat Customer <i class="glyphicon glyphicon-repeat"></i>
+          Repeat Customer
+          {% include "revenue_tracker/_repeat_customer_stats.html" %}
         {% endif %}
       </li>
     </ul>

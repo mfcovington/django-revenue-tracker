@@ -20,7 +20,7 @@
         <tr>
           <td>
             {% if customer.is_repeat_customer %}
-              <small><i class="glyphicon glyphicon-repeat" data-toggle="tooltip" data-placement="top" title="{{ customer.tx_count }} Transactions"></i></small>
+              {% include "revenue_tracker/_repeat_customer_stats.html" %}
             {% endif %}
           </td>
           <td>
