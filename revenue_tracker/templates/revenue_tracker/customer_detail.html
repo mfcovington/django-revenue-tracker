@@ -9,22 +9,44 @@
 
   <div class="container">
 
-    <ul>
-      <li>{{ customer.institution }}</li>
-      <li>{{ customer.name }}</li>
-      <li>{{ customer.contact }}</li>
-      <li>{{ customer.website }}</li>
-      <li>{{ customer.contact_name }}</li>
-      <li>{{ customer.customer }}</li>
-      <li>{{ customer.institution_type }}</li>
-      <li>{{ tx_count }}</li>
-      <li>
-        {% if tx_count > 1 %}
-          Repeat Customer
-          {% include "revenue_tracker/_repeat_customer_stats.html" %}
+    <a name='summary'></a>
+    <div class="jumbotron">
+      <h3>
+        <span class="label label-{{ customer.institution_type }} pull-right">
+          {{ customer.institution_type }}
+        </span>
+      </h3>
+
+      {% if customer.name %}
+        <h1 class="customer">
+          {% if customer.website %}<a href="{{ customer.website }}">{{ customer.name }}</a>{% else %}{{ customer.name }}{% endif %}
+        <br>
+        <small>
+          {% if customer.institution.website %}<a href="{{ customer.institution.website }}">{{ customer.institution }}</a>{% else %}{{ customer.institution }}{% endif %}
+        </small>
+        </h1>
+      {% else %}
+        <h1>
+          {% if customer.institution.website %}<a href="{{ customer.institution.website }}">{{ customer.institution }}</a>{% else %}{{ customer.institution }}{% endif %}
+        </h1>
+      {% endif %}
+
+      {% if customer.contact %}
+          <i class="glyphicon glyphicon-user"></i>:
+        {{ customer.contact.name }}
+        {% if customer.contact.email %}
+          <a href="mailto:{{ customer.contact.email }}"><i class="glyphicon glyphicon glyphicon-envelope"></i></a>
         {% endif %}
-      </li>
-    </ul>
+        {% if customer.contact.website %}
+          <a href="{{ customer.contact.website }}" target="_blank"><i class="glyphicon glyphicon-share-alt"></i></a>
+        {% endif %}
+        {% if customer.contact.phone %}
+          <br>
+          <i class="glyphicon glyphicon-earphone"></i>: {{ customer.contact.phone.as_international }}
+        {% endif %}
+      {% endif %}
+    </div>
+
     <h2>Transaction Summary</h2>
     {% if unfulfilled_list %}
       {% include "revenue_tracker/_transaction_summary_panel.html" with panel_type="danger" full_report=report_unfulfilled anchor="pending-transaction-summary" panel_title="Pending" %}
@@ -37,33 +59,6 @@
       {% include "revenue_tracker/_transaction_panel.html" with panel_type="danger" transaction_list=unfulfilled_list transaction_type="all" anchor="pending-transactions" panel_title="Pending" %}
     {% endif %}
     {% include "revenue_tracker/_transaction_panel.html" with panel_type="primary" transaction_list=fulfilled_list transaction_type="all" anchor="completed-transactions" panel_title="Completed" %}
-
-
-    {# <ul class=" #}
-      {# {% if transaction.transaction_type == 'kit' %} #}
-        {# alert-success #}
-      {# {% elif transaction.transaction_type == 'service' %} #}
-        {# alert-info #}
-      {# {% elif transaction.transaction_type == 'other' %} #}
-        {# alert-warning #}
-      {# {% endif %} #}
-    {# "> #}
-      {# <li>{{ transaction.transaction_type|get_verbose_transaction_type }}</li> #}
-      {# <li>{{ transaction.number_of_reactions }}</li> #}
-      {# <li>{{ transaction.customer }}</li> #}
-      {# <li>{{ transaction.vendor }}</li> #}
-      {# <li>{{ transaction.date }}</li> #}
-      {# <li>{{ transaction.total_price }}</li> #}
-      {# <li>{{ transaction.ip_related_price }}</li> #}
-      {# <li>{{ transaction.quote }}</li> #}
-      {# <li>{{ transaction.order }}</li> #}
-      {# <li>{{ transaction.invoice }}</li> #}
-      {# <li>{{ transaction.date_fulfilled }}</li> #}
-      {# <li>{{ transaction.date_paid }}</li> #}
-      {# <li>{{ transaction.description }}</li> #}
-      {# <li>{{ transaction.notes }}</li> #}
-      {# <li><a href="{% url 'admin:revenue_tracker_transaction_change' transaction.pk %}" target="_blank"><i class="glyphicon glyphicon-pencil"></i></a></li> #}
-    {# </ul> #}
 
   </div>
 

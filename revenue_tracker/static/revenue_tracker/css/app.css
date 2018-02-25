@@ -1,3 +1,23 @@
+h1.customer {
+  line-height: 0.9;
+}
+
+/**********/
+/* Labels */
+/**********/
+
+.label-Academic {
+  background-color: rgb(255, 97, 102);
+}
+
+.label-Government {
+  background-color: rgb(129, 133, 255);
+}
+
+.label-Industry {
+  background-color: rgb(85, 182, 83);
+}
+
 /**********/
 /* Panels */
 /**********/
