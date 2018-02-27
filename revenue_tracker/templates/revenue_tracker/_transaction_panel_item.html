@@ -74,6 +74,6 @@
   <td>{{ transaction.royalties_owed }}</td>
   <td>
     <a href="{% url 'revenue_tracker:transaction_detail' pk=transaction.pk %}"><i class="glyphicon glyphicon-info-sign"></i></a>
-    <a href="{% url 'admin:revenue_tracker_transaction_change' transaction.pk %}" target="_blank"><i class="glyphicon glyphicon-pencil"></i></a>
+    <a href="{% url 'admin:revenue_tracker_transaction_change' transaction.pk %}?next={% if customer %}{% url 'revenue_tracker:customer_detail' pk=customer.pk %}{% else %}{% url 'revenue_tracker:transaction_list' %}{% endif %}"><i class="glyphicon glyphicon-pencil"></i></a>
   </td>
 </tr>

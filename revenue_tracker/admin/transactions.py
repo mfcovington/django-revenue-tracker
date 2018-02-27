@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.http import HttpResponseRedirect
 
 from ..models import BasePrice, Invoice, Order, Quote, Transaction
 from ..models import Customer
@@ -110,3 +111,17 @@ class TransactionAdmin(admin.ModelAdmin):
         return {
             'customer': customer,
         }
+
+    def response_add(self, request, obj, post_url_continue=None):
+        result = super().response_add(request, obj, post_url_continue)
+        if '_continue' not in request.POST and 'next' in request.GET:
+            return HttpResponseRedirect(request.GET['next'])
+        else:
+            return result
+
+    def response_change(self, request, obj):
+        result = super().response_change(request, obj)
+        if '_continue' not in request.POST and 'next' in request.GET:
+            return HttpResponseRedirect(request.GET['next'])
+        else:
+            return result

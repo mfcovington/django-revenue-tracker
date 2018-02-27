@@ -56,7 +56,7 @@
 
     <h2>
       Transactions
-      <small><a href="{% url 'admin:revenue_tracker_transaction_add' %}?customer_pk={{ customer.pk }}"><i class="glyphicon glyphicon-plus-sign"></i></a></small>
+      <small><a href="{% url 'admin:revenue_tracker_transaction_add' %}?customer_pk={{ customer.pk }}&amp;next={% url 'revenue_tracker:customer_detail' pk=customer.pk %}"><i class="glyphicon glyphicon-plus-sign"></i></a></small>
     </h2>
     {% if unfulfilled_list %}
       {% include "revenue_tracker/_transaction_panel.html" with panel_type="danger" transaction_list=unfulfilled_list transaction_type="all" anchor="pending-transactions" panel_title="Pending" %}
