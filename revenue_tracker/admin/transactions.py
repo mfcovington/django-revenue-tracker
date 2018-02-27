@@ -1,6 +1,7 @@
 from django.contrib import admin
 
 from ..models import BasePrice, Invoice, Order, Quote, Transaction
+from ..models import Customer
 
 
 class FulfillmentStatusFilter(admin.SimpleListFilter):
@@ -99,3 +100,13 @@ class TransactionAdmin(admin.ModelAdmin):
         'vendor__name',
         'vendor__contact__name',
     ]
+
+    def get_changeform_initial_data(self, request):
+        customer_pk = request.GET.get('customer_pk')
+        try:
+            customer = Customer.objects.get(pk=customer_pk)
+        except:
+            customer = None
+        return {
+            'customer': customer,
+        }
