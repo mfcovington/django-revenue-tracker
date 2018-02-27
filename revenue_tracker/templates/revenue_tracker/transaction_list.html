@@ -56,7 +56,10 @@
       {% include "revenue_tracker/_transaction_summary_panel.html" with panel_type="info" full_report=report_including_unfulfilled anchor="completed-and-pending-transaction-summary" panel_title="Completed & Pending" %}
     </div>
     {% include "revenue_tracker/_transaction_summary_panel.html" with panel_type="primary" full_report=report anchor="completed-transaction-summary" panel_title="Completed" %}
-    <h2>Transactions</h2>
+    <h2>
+      Transactions
+      <small><a href="{% url 'admin:revenue_tracker_transaction_add' %}"><i class="glyphicon glyphicon-plus-sign"></i></a></small>
+    </h2>
     <div class="in-progress" style="display: none;">
       {% include "revenue_tracker/_transaction_panel.html" with panel_type="danger" transaction_list=unfulfilled_list transaction_type="all" anchor="pending-transactions" panel_title="Pending" %}
     </div>
