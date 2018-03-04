@@ -1,2 +1,2 @@
-from .people import Contact, Country, Customer, Institution, Vendor
+from .people import Customer, Vendor
 from .transactions import BasePrice, Invoice, Order, Quote, Transaction

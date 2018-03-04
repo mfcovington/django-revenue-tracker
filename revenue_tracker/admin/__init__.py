@@ -1,4 +1,3 @@
-from .people import (ContactAdmin, CountryAdmin, CustomerAdmin,
-    InstitutionAdmin, VendorAdmin)
+from .people import CustomerAdmin, VendorAdmin
 from .transactions import (BasePriceAdmin, InvoiceAdmin, QuoteAdmin,
     TransactionAdmin)
