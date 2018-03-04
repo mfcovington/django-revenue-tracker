@@ -1,3 +1,5 @@
+import datetime
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count, Min, Max
 from django.shortcuts import render
@@ -21,6 +23,10 @@ class CustomerDetail(LoginRequiredMixin, DetailView):
             from_date = dates_fulfilled['date_fulfilled__min']
         if to_date == '':
             to_date = dates_fulfilled['date_fulfilled__max']
+        if from_date is None:
+            from_date = datetime.date.today()
+        if to_date is None:
+            to_date = datetime.date.today()
         return [from_date, to_date]
 
     def get_context_data(self, **kwargs):
@@ -99,6 +105,10 @@ class TransactionList(LoginRequiredMixin, ListView):
                 from_date = dates_fulfilled['date_fulfilled__min']
             if to_date == '':
                 to_date = dates_fulfilled['date_fulfilled__max']
+            if from_date is None:
+                from_date = datetime.date.today()
+            if to_date is None:
+                to_date = datetime.date.today()
 
         return [from_date, to_date]
 
@@ -126,6 +136,9 @@ class TransactionList(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         transaction_date_range = self._transaction_date_range()
-        return Transaction.objects.filter(
-            date_fulfilled__gte=transaction_date_range[0],
-            date_fulfilled__lte=transaction_date_range[1])
+        if transaction_date_range == [None, None]:
+            return None
+        else:
+            return Transaction.objects.filter(
+                date_fulfilled__gte=transaction_date_range[0],
+                date_fulfilled__lte=transaction_date_range[1])
