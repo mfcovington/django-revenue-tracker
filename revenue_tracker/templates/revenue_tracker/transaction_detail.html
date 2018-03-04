@@ -1,5 +1,5 @@
 {% extends "revenue_tracker/base.html" %}
-{% load get_verbose_transaction_type humanize %}
+{% load humanize %}
 
 {% block title %}
   {{ transaction }} | {{ block.super }}
@@ -18,7 +18,7 @@
         alert-warning
       {% endif %}
     ">
-      <li>{{ transaction.transaction_type|get_verbose_transaction_type }}</li>
+      <li>{{ transaction.get_transaction_type_display }}</li>
       <li>{{ transaction.number_of_reactions }}</li>
       <li><a href="{% url 'revenue_tracker:customer_detail' pk=transaction.customer.pk %}">{{ transaction.customer }}</a></li>
       <li>{{ transaction.vendor }}</li>
