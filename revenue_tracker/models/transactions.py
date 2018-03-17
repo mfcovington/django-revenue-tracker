@@ -258,7 +258,9 @@ class RoyaltiesManager(models.Manager):
         if include_in_progress:
             in_progress = Customer.objects.annotate(
                 c_tx_count=Count('transaction__date', distinct=True)
-            ).filter(transaction__date_fulfilled__isnull=True, **cid_c_kwargs)
+            ).filter(
+                transaction__date_fulfilled__isnull=True,
+                c_tx_count__gt=0, **cid_c_kwargs)
             customers = customers | in_progress
 
         customers = customers.distinct()
