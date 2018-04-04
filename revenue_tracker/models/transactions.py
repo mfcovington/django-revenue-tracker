@@ -268,7 +268,11 @@ class RoyaltiesManager(models.Manager):
 
         report['customer_count'] = customers.count()
         report['repeat_customer_count'] = repeat_customers.count()
-        report['repeat_customer_pct'] = repeat_customers.count() / customers.count()
+        try:
+            repeat_customer_pct = repeat_customers.count() / customers.count()
+        except ZeroDivisionError:
+            repeat_customer_pct = 0
+        report['repeat_customer_pct'] = repeat_customer_pct
 
         by_type = transactions_by_date.values('transaction_type').annotate(
             sum_total_price=Sum('total_price'),
@@ -324,7 +328,11 @@ class RoyaltiesManager(models.Manager):
 
             subreport['customer_count'] = customers_by_type.count()
             subreport['repeat_customer_count'] = repeat_customers_by_type.count()
-            subreport['repeat_customer_pct'] = repeat_customers_by_type.count() / customers_by_type.count()
+            try:
+                repeat_customer_pct = repeat_customers_by_type.count() / customers_by_type.count()
+            except ZeroDivisionError:
+                repeat_customer_pct = 0
+            subreport['repeat_customer_pct'] = repeat_customer_pct
 
         report['by_type'] = by_type
 
