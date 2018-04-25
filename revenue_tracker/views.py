@@ -85,6 +85,9 @@ class TransactionList(LoginRequiredMixin, ListView):
         year = self.request.GET.get('year', None)
         quarter = self.request.GET.get('quarter', None)
 
+        dates_fulfilled = Transaction.objects.values('date_fulfilled').aggregate(
+            Min('date_fulfilled'), Max('date_fulfilled'))
+
         if year:
             if quarter:
                 period = quarters[quarter]
@@ -95,8 +98,6 @@ class TransactionList(LoginRequiredMixin, ListView):
             to_date='{}-{}'.format(year, period[1])
 
         else:
-            dates_fulfilled = Transaction.objects.values('date_fulfilled').aggregate(
-                Min('date_fulfilled'), Max('date_fulfilled'))
             from_date = self.request.GET.get(
                 'from_date', dates_fulfilled['date_fulfilled__min'])
             to_date = self.request.GET.get(
@@ -110,13 +111,24 @@ class TransactionList(LoginRequiredMixin, ListView):
             if to_date is None:
                 to_date = datetime.date.today()
 
-        return [from_date, to_date]
+        first_date = dates_fulfilled['date_fulfilled__min']
+        last_date = dates_fulfilled['date_fulfilled__max']
+
+        return [from_date, to_date, first_date, last_date]
 
     def get_context_data(self, **kwargs):
         context = super(TransactionList, self).get_context_data(**kwargs)
         transaction_date_range = self._transaction_date_range()
         from_date=transaction_date_range[0]
         to_date=transaction_date_range[1]
+        first_date=transaction_date_range[2]
+        last_date=transaction_date_range[3]
+        context['year_range'] = range(first_date.year, last_date.year + 1)
+        context['tx_date_range'] = {
+            2016: ['Q2', 'Q3', 'Q4'],
+            2017: ['Q1', 'Q2', 'Q3', 'Q4'],
+            2018: ['Q1', 'Q2'],
+        }
         context['year'] = self.request.GET.get('year', None)
         context['quarter'] = self.request.GET.get('quarter', None)
         context['report'] = Transaction.objects.get_royalties_report(

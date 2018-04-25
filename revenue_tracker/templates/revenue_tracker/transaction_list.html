@@ -12,25 +12,48 @@
     <div class="jumbotron">
       <h1>Transaction Report</h1>
       <div class="well">
-        <div class="btn-group">
-          <button class="btn btn-lg btn-success" id="2016" onclick="filter_by_period(year=2016)">2016</button>
-          <button class="btn btn-lg btn-default" id="2016-Q1" onclick="filter_by_period(year=2016, quarter='Q1')">Q1</button>
-          <button class="btn btn-lg btn-default" id="2016-Q2" onclick="filter_by_period(year=2016, quarter='Q2')">Q2</button>
-          <button class="btn btn-lg btn-default" id="2016-Q3" onclick="filter_by_period(year=2016, quarter='Q3')">Q3</button>
-          <button class="btn btn-lg btn-default" id="2016-Q4" onclick="filter_by_period(year=2016, quarter='Q4')">Q4</button>
-        </div>
-        <div class="btn-group">
-          <button class="btn btn-lg btn-success" id="2017" onclick="filter_by_period(year=2017)">2017</button>
-          <button class="btn btn-lg btn-default" id="2017-Q1" onclick="filter_by_period(year=2017, quarter='Q1')">Q1</button>
-          <button class="btn btn-lg btn-default" id="2017-Q2" onclick="filter_by_period(year=2017, quarter='Q2')">Q2</button>
-          <button class="btn btn-lg btn-default" id="2017-Q3" onclick="filter_by_period(year=2017, quarter='Q3')">Q3</button>
-          <button class="btn btn-lg btn-default" id="2017-Q4" onclick="filter_by_period(year=2017, quarter='Q4')">Q4</button>
-        </div>
-        <div class="btn-group">
-          <button class="btn btn-lg btn-success" id="2018" onclick="filter_by_period(year=2018)">2018</button>
-          <button class="btn btn-lg btn-default" id="2018-Q1" onclick="filter_by_period(year=2018, quarter='Q1')">Q1</button>
-          <button class="btn btn-lg btn-default" id="2018-Q2" onclick="filter_by_period(year=2018, quarter='Q2')">Q2</button>
-        </div>
+        {% for year, quarters in tx_date_range.items %}
+          <div class="btn-group">
+            <button class="btn btn-lg btn-success" id="{{ year }}" onclick="filter_by_period(year={{ year }})">{{ year }}</button>
+            {% for q_num in "1234" %}
+              {% with Q="Q"|add:q_num %}
+                <button class="btn btn-lg btn-default {% if Q not in quarters %}disabled{% endif %}" id="{{ year }}-{{ Q }}" {% if Q in quarters %}onclick="filter_by_period(year={{ year }}, quarter=Q)"{% endif %}>{{ Q }}</button>
+              {% endwith %}
+            {% endfor %}
+          </div>
+        {% endfor %}
+      </div>
+      <div class="well">
+        {% for year, quarters in tx_date_range.items %}
+          <div class="btn-group">
+            <button class="btn btn-lg btn-success" id="{{ year }}" onclick="filter_by_period(year={{ year }})">{{ year }}</button>
+            <button class="btn btn-lg btn-default {% if 'Q1' not in quarters %}disabled{% endif %}" id="{{ year }}-Q1" {% if 'Q1' in quarters %}onclick="filter_by_period(year={{ year }}, quarter='Q1')"{% endif %}>Q1</button>
+            <button class="btn btn-lg btn-default {% if 'Q2' not in quarters %}disabled{% endif %}" id="{{ year }}-Q2" {% if 'Q2' in quarters %}onclick="filter_by_period(year={{ year }}, quarter='Q2')"{% endif %}>Q2</button>
+            <button class="btn btn-lg btn-default {% if 'Q3' not in quarters %}disabled{% endif %}" id="{{ year }}-Q3" {% if 'Q3' in quarters %}onclick="filter_by_period(year={{ year }}, quarter='Q3')"{% endif %}>Q3</button>
+            <button class="btn btn-lg btn-default {% if 'Q4' not in quarters %}disabled{% endif %}" id="{{ year }}-Q4" {% if 'Q4' in quarters %}onclick="filter_by_period(year={{ year }}, quarter='Q4')"{% endif %}>Q4</button>
+          </div>
+        {% endfor %}
+      </div>
+      <div class="well">
+        {% for year, quarters in tx_date_range.items %}
+          <div class="btn-group">
+            <button class="btn btn-lg btn-success" id="{{ year }}" onclick="filter_by_period(year={{ year }})">{{ year }}</button>
+            {% for quarter in quarters %}
+              <button class="btn btn-lg btn-default" id="{{ year }}-{{ quarter }}" onclick="filter_by_period(year={{ year }}, quarter='{{ quarter }}')">{{ quarter }}</button>
+            {% endfor %}
+          </div>
+        {% endfor %}
+      </div>
+      <div class="well">
+        {% for year in year_range %}
+          <div class="btn-group">
+            <button class="btn btn-lg btn-success" id="{{ year }}" onclick="filter_by_period(year={{ year }})">{{ year }}</button>
+            <button class="btn btn-lg btn-default" id="{{ year }}-Q1" onclick="filter_by_period(year={{ year }}, quarter='Q1')">Q1</button>
+            <button class="btn btn-lg btn-default" id="{{ year }}-Q2" onclick="filter_by_period(year={{ year }}, quarter='Q2')">Q2</button>
+            <button class="btn btn-lg btn-default" id="{{ year }}-Q3" onclick="filter_by_period(year={{ year }}, quarter='Q3')">Q3</button>
+            <button class="btn btn-lg btn-default" id="{{ year }}-Q4" onclick="filter_by_period(year={{ year }}, quarter='Q4')">Q4</button>
+          </div>
+        {% endfor %}
       </div>
       <form method="get">
         <label for="from_date">From date: </label>
