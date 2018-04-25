@@ -17,7 +17,7 @@
             <button class="btn btn-lg btn-success" id="{{ year }}" onclick="filter_by_period(year={{ year }})">{{ year }}</button>
             {% for q_num in "1234" %}
               {% with Q="Q"|add:q_num %}
-                <button class="btn btn-lg btn-default {% if Q not in quarters %}disabled{% endif %}" id="{{ year }}-{{ Q }}" {% if Q in quarters %}onclick="filter_by_period(year={{ year }}, quarter=Q)"{% endif %}>{{ Q }}</button>
+                <button class="btn btn-lg btn-default {% if Q not in quarters %}disabled{% endif %}" id="{{ year }}-{{ Q }}" {% if Q in quarters %}onclick="filter_by_period(year={{ year }}, quarter='{{ Q }}')"{% endif %}>{{ Q }}</button>
               {% endwith %}
             {% endfor %}
           </div>
