@@ -123,7 +123,6 @@ class TransactionList(LoginRequiredMixin, ListView):
         to_date=transaction_date_range[1]
         first_date=transaction_date_range[2]
         last_date=transaction_date_range[3]
-        context['year_range'] = range(first_date.year, last_date.year + 1)
         context['tx_date_range'] = {
             2016: ['Q2', 'Q3', 'Q4'],
             2017: ['Q1', 'Q2', 'Q3', 'Q4'],
