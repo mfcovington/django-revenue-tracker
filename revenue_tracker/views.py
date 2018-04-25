@@ -73,15 +73,14 @@ class TransactionList(LoginRequiredMixin, ListView):
     context_object_name = 'transaction_list'
     model = Transaction
 
+    _quarters = {
+        'Q1': ['01-01', '03-31'],
+        'Q2': ['04-01', '06-30'],
+        'Q3': ['07-01', '09-30'],
+        'Q4': ['10-01', '12-31'],
+    }
+
     def _transaction_date_range(self):
-
-        quarters = {
-            'Q1': ['01-01', '03-31'],
-            'Q2': ['04-01', '06-30'],
-            'Q3': ['07-01', '09-30'],
-            'Q4': ['10-01', '12-31'],
-        }
-
         year = self.request.GET.get('year', None)
         quarter = self.request.GET.get('quarter', None)
 
@@ -90,7 +89,7 @@ class TransactionList(LoginRequiredMixin, ListView):
 
         if year:
             if quarter:
-                period = quarters[quarter]
+                period = self._quarters[quarter]
             else:
                 period = ['01-01', '12-31']
 
@@ -123,11 +122,18 @@ class TransactionList(LoginRequiredMixin, ListView):
         to_date=transaction_date_range[1]
         first_date=transaction_date_range[2]
         last_date=transaction_date_range[3]
-        context['tx_date_range'] = {
-            2016: ['Q2', 'Q3', 'Q4'],
-            2017: ['Q1', 'Q2', 'Q3', 'Q4'],
-            2018: ['Q1', 'Q2'],
-        }
+
+        tx_date_range = {}
+        for year in range(first_date.year, last_date.year + 1):
+            tx_date_range[year] = []
+            for quarter, quarter_range in self._quarters.items():
+                if Transaction.objects.filter(
+                    date_fulfilled__gte='{}-{}'.format(year, quarter_range[0]),
+                    date_fulfilled__lte='{}-{}'.format(year, quarter_range[1])
+                ):
+                    tx_date_range[year].append(quarter)
+
+        context['tx_date_range'] = tx_date_range
         context['year'] = self.request.GET.get('year', None)
         context['quarter'] = self.request.GET.get('quarter', None)
         context['report'] = Transaction.objects.get_royalties_report(
