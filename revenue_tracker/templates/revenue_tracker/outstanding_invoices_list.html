@@ -14,14 +14,10 @@
     </div>
 
     <h2>Transaction Summary</h2>
-    {% include "revenue_tracker/_transaction_summary_panel.html" with panel_type="primary" full_report=report anchor="completed-transaction-summary" panel_title="" %}
-    <h2>
-      Transactions
-    </h2>
-    <div class="in-progress" style="display: none;">
-      {% include "revenue_tracker/_transaction_panel.html" with panel_type="danger" transaction_list=unfulfilled_list transaction_type="all" anchor="pending-transactions" panel_title="Pending" %}
-    </div>
-    {% include "revenue_tracker/_transaction_panel.html" with panel_type="primary" transaction_list=transaction_list transaction_type="all" anchor="completed-transactions" panel_title="Completed" %}
+    {% include "revenue_tracker/_transaction_summary_panel.html" with panel_type="primary" full_report=report anchor="completed-transaction-summary" panel_title="Completed and Unpaid" %}
+
+    <h2>Transactions</h2>
+    {% include "revenue_tracker/_transaction_panel.html" with panel_type="primary" transaction_list=transaction_list transaction_type="all" anchor="completed-transactions" panel_title="Completed and Unpaid" %}
 
   </div>
 
