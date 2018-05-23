@@ -185,13 +185,18 @@ class RoyaltiesManager(models.Manager):
 
     def get_royalties_report(
         self, from_date=None, to_date=None, in_progress_only=False,
-        customer_id=None, include_in_progress=False):
+        customer_id=None, include_in_progress=False, outstanding=False):
 
         c_kwargs = {}
         t_kwargs = {}
         if in_progress_only:
                 t_kwargs['date_fulfilled'] = None
                 c_kwargs['transaction__date_fulfilled'] = None
+        elif outstanding:
+            t_kwargs['date_fulfilled__isnull'] = False
+            t_kwargs['date_paid__isnull'] = True
+            c_kwargs['transaction__date_fulfilled__isnull'] = False
+            c_kwargs['transaction__date_paid__isnull'] = True
         else:
             if from_date is not None:
                 t_kwargs['date_fulfilled__gte'] = from_date
@@ -459,6 +464,13 @@ class Transaction(models.Model):
         else:
             return (self.base_ip_related_price_per_reaction
                 * self.number_of_reactions)
+
+    @property
+    def is_outstanding(self):
+        if self.date_fulfilled is not None and self.date_paid is None:
+            return True
+        else:
+            return False
 
     @property
     def royalties_owed(self):

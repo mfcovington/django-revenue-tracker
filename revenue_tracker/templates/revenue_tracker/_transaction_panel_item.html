@@ -7,13 +7,16 @@
     alert-warning
   {% endif %}
 ">
-  {% if not customer %}
-    <td>
+  <td>
+    {% if not customer %}
       {% if transaction.customer.is_repeat_customer %}
         {% include "revenue_tracker/_repeat_customer_stats.html" with customer=transaction.customer %}
       {% endif %}
-    </td>
-  {% endif %}
+    {% endif %}
+    {% if transaction.is_outstanding %}
+      <i class="glyphicon glyphicon-hourglass"></i>
+    {% endif %}
+  </td>
   <td>{{ transaction.date }}</td>
   <td>{{ transaction.date_fulfilled|default:"-" }}</td>
   {% if not customer %}

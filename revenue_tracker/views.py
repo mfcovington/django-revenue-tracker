@@ -64,6 +64,23 @@ class CustomerList(LoginRequiredMixin, ListView):
     model = Customer
 
 
+class OutstandingInvoicesList(LoginRequiredMixin, ListView):
+    context_object_name = 'transaction_list'
+    model = Transaction
+    template_name = 'revenue_tracker/outstanding_invoices_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(OutstandingInvoicesList, self).get_context_data(**kwargs)
+        context['report'] = Transaction.objects.get_royalties_report(
+            outstanding=True)
+        return context
+
+    def get_queryset(self):
+        return Transaction.objects.filter(
+                date_fulfilled__isnull=False, date_paid__isnull=True
+            ).order_by('date_fulfilled')
+
+
 class TransactionDetail(LoginRequiredMixin, DetailView):
     context_object_name = 'transaction'
     model = Transaction
