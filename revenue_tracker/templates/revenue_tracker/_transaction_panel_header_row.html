@@ -1,5 +1,8 @@
 <tr>
   <th></th>
+  {% if outstanding %}
+    <th><i class="glyphicon glyphicon-hourglass"></i></th>
+  {% endif %}
   <th>Date Ordered</th>
   <th>Date Fulfilled</th>
   {% if not customer %}

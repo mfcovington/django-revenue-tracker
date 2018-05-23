@@ -71,6 +71,7 @@ class OutstandingInvoicesList(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super(OutstandingInvoicesList, self).get_context_data(**kwargs)
+        context['outstanding'] = True
         context['report'] = Transaction.objects.get_royalties_report(
             outstanding=True)
         return context

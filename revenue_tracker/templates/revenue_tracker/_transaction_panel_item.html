@@ -13,10 +13,17 @@
         {% include "revenue_tracker/_repeat_customer_stats.html" with customer=transaction.customer %}
       {% endif %}
     {% endif %}
-    {% if transaction.is_outstanding %}
-      <i class="glyphicon glyphicon-hourglass"></i>
+    {% if not outstanding %}
+      {% if transaction.is_outstanding %}
+        <small><i class="glyphicon glyphicon-hourglass" data-toggle="tooltip" data-placement="top" title="{{ transaction.date_fulfilled|timesince }}"></i></small>
+      {% endif %}
     {% endif %}
   </td>
+  {% if outstanding %}
+    <td>
+      {{ transaction.date_fulfilled|timesince }}
+    </td>
+  {% endif %}
   <td>{{ transaction.date }}</td>
   <td>{{ transaction.date_fulfilled|default:"-" }}</td>
   {% if not customer %}

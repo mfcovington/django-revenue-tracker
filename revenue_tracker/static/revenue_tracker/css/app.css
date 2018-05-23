@@ -54,3 +54,7 @@ table tfoot {
 th, tr {
   text-align: center;
 }
+
+th .glyphicon-hourglass {
+  font-size: 1.2em;
+}
