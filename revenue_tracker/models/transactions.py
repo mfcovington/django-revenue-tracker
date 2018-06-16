@@ -473,6 +473,13 @@ class Transaction(models.Model):
             return False
 
     @property
+    def is_prepaid(self):
+        if self.date_fulfilled is None and self.date_paid is not None:
+            return True
+        else:
+            return False
+
+    @property
     def royalties_owed(self):
         return self.ip_related_price * ROYALTY_PERCENTAGE
 

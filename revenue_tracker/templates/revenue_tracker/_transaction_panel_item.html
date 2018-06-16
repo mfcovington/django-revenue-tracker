@@ -18,6 +18,9 @@
         <small><i class="glyphicon glyphicon-hourglass" data-toggle="tooltip" data-placement="top" title="{{ transaction.date_fulfilled|timesince }}"></i></small>
       {% endif %}
     {% endif %}
+    {% if transaction.is_prepaid %}
+      <small><i class="glyphicon glyphicon-usd" data-toggle="tooltip" data-placement="top" title="{{ transaction.date_paid|timesince }}"></i></small>
+    {% endif %}
   </td>
   {% if outstanding %}
     <td>
