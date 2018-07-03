@@ -21,6 +21,9 @@
     {% if transaction.is_prepaid %}
       <small><i class="glyphicon glyphicon-usd" data-toggle="tooltip" data-placement="top" title="{{ transaction.date_paid|timesince }}"></i></small>
     {% endif %}
+    {% if transaction.transaction_type == 'service' and not transaction.date_samples_arrived %}
+      <small><i class="glyphicon glyphicon-ban-circle" data-toggle="tooltip" data-placement="top" title="Samples have not yet arrived."></i></small>
+    {% endif %}
   </td>
   {% if outstanding %}
     <td>
