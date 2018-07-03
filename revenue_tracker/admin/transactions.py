@@ -5,6 +5,28 @@ from ..models import BasePrice, Invoice, Order, Quote, Transaction
 from ..models import Customer
 
 
+class SamplesArrivedForServiceStatusFilter(admin.SimpleListFilter):
+    """
+    Filter service Transaction records by whether it the samples have arrived.
+    """
+    title = 'service sample status'
+    parameter_name = 'service_sample_status'
+
+    def lookups(self, request, model_admin):
+        return (
+            ('arrived', 'Arrived'),
+            ('not_arrived', 'Not Arrived'),
+        )
+
+    def queryset(self, request, queryset):
+        if self.value() == 'not_arrived':
+            return queryset.filter(
+                transaction_type='service', date_samples_arrived=None)
+        elif self.value() == 'arrived':
+            return queryset.filter(
+                transaction_type='service').exclude(date_samples_arrived=None)
+
+
 class FulfillmentStatusFilter(admin.SimpleListFilter):
     """
     Filter Transaction records by whether it has been fulfilled.
@@ -77,6 +99,7 @@ class TransactionAdmin(admin.ModelAdmin):
         'vendor',
         'transaction_type',
         'number_of_reactions',
+        'date_samples_arrived',
         'date_fulfilled',
         'date_paid',
         'total_price',
@@ -87,6 +110,7 @@ class TransactionAdmin(admin.ModelAdmin):
     ]
     list_filter = [
         'transaction_type',
+        SamplesArrivedForServiceStatusFilter,
         FulfillmentStatusFilter,
         PaymentStatusFilter,
     ]

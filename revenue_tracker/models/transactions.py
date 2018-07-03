@@ -389,6 +389,11 @@ class Transaction(models.Model):
         blank=True,
         null=True,
     )
+    date_samples_arrived = models.DateField(
+        blank=True,
+        help_text='If this is a service transaction, what date did the samples arrive?',
+        null=True,
+    )
     date_paid = models.DateField(
         blank=True,
         null=True,
