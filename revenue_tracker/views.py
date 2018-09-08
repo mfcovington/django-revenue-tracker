@@ -165,8 +165,15 @@ class TransactionList(LoginRequiredMixin, ListView):
             transaction_type=transaction_type)
         context['from_date'] = str(from_date)
         context['to_date'] = str(to_date)
+
+        type_kwargs = {}
+        if institution_type:
+            type_kwargs['customer__institution__institution_type'] = institution_type
+        if transaction_type:
+            type_kwargs['transaction_type'] = transaction_type
         context['unfulfilled_list'] = Transaction.objects.filter(
-            date_fulfilled=None)
+            date_fulfilled=None, **type_kwargs)
+
         context['report_including_unfulfilled'] = Transaction.objects.get_royalties_report(
             from_date=from_date,
             to_date=to_date,
