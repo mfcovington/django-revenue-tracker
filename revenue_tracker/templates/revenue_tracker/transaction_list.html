@@ -31,29 +31,23 @@
       <div class="well">
         <form method="get" class="form-inline">
           <div class="form-row">
-
-            <div class='col-sm-4'>
-              <div class="form-group">
-                <label for="from_date">From: </label>
-                <div class='input-group date' id='from_date_picker'>
-                  <input id="from_date" class="form-control" name="from_date" type='text' value="{{ from_date }}">
-                  <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                </div>
+            <div class="form-group">
+              <div class='input-group date' id='from_date_picker'>
+                <span class="input-group-addon">From</span>
+                <input id="from_date" class="form-control" name="from_date" type='text' value="{{ from_date }}">
+                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
               </div>
             </div>
 
-            <div class='col-sm-4'>
-              <div class="form-group">
-                <label for="to_date">To: </label>
-                <div class='input-group date' id='to_date_picker'>
-                  <input id="to_date" class="form-control" name="to_date" type='text' value="{{ to_date }}">
-                  <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                </div>
+            <div class="form-group">
+              <div class='input-group date' id='to_date_picker'>
+                <span class="input-group-addon">To</span>
+                <input id="to_date" class="form-control" name="to_date" type='text' value="{{ to_date }}">
+                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
               </div>
             </div>
 
-            <div class="form-group col-sm-4">
-              <label>Last X Days: </label>
+            <div class="form-group">
               <div class="btn-group">
                 <a id="last-365" class="btn btn-default" onclick="set_date_range_since(days=365)"><small>-365</small></a>
                 <a id="last-90" class="btn btn-default" onclick="set_date_range_since(days=90)"><small>-90</small></a>
