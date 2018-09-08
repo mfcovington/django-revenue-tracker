@@ -61,15 +61,15 @@
 
           <div class="form-row">
             <div class="form-group btn-group" data-toggle="buttons">
-              <label class="btn btn-default"><input type="radio" name="institution-type" id="institution-academic" autocomplete="off">Academic</label>
-              <label class="btn btn-default"><input type="radio" name="institution-type" id="institution-government" autocomplete="off">Government</label>
-              <label class="btn btn-default"><input type="radio" name="institution-type" id="institution-industry" autocomplete="off">Industry</label>
+              <label class="btn btn-default radio-label"><input type="radio" name="institution_type" value="Academic" id="institution-academic" autocomplete="off">Academic</label>
+              <label class="btn btn-default radio-label"><input type="radio" name="institution_type" value="Government" id="institution-government" autocomplete="off">Government</label>
+              <label class="btn btn-default radio-label"><input type="radio" name="institution_type" value="Industry" id="institution-industry" autocomplete="off">Industry</label>
             </div>
 
             <div class="form-group btn-group" data-toggle="buttons">
-              <label class="btn btn-default"><input type="radio" name="transaction-type" id="transaction-kit" autocomplete="off">Kit Sale</label>
-              <label class="btn btn-default"><input type="radio" name="transaction-type" id="transaction-service" autocomplete="off">Service Contract</label>
-              <label class="btn btn-default"><input type="radio" name="transaction-type" id="transaction-other" autocomplete="off">Other</label>
+              <label class="btn btn-default radio-label"><input type="radio" name="transaction_type" value="kit" id="transaction-kit" autocomplete="off">Kit Sale</label>
+              <label class="btn btn-default radio-label"><input type="radio" name="transaction_type" value="service" id="transaction-service" autocomplete="off">Service Contract</label>
+              <label class="btn btn-default radio-label"><input type="radio" name="transaction_type" value="other" id="transaction-other" autocomplete="off">Other</label>
             </div>
           </div>
 
@@ -145,6 +145,12 @@
           $('#{{ year }}-Q4').addClass('active');
         }
       }
+
+      var $institution_radios = $('input:radio[name=institution_type]');
+      $institution_radios.filter('[value={{ institution_type }}]').click();
+
+      var $transaction_radios = $('input:radio[name=transaction_type]');
+      $transaction_radios.filter('[value={{ transaction_type }}]').click();
 
       // Set min/max dates for date picker on page load
       $('#from_date_picker').data("DateTimePicker").maxDate("{{ to_date }}");

@@ -185,10 +185,21 @@ class RoyaltiesManager(models.Manager):
 
     def get_royalties_report(
         self, from_date=None, to_date=None, in_progress_only=False,
-        customer_id=None, include_in_progress=False, outstanding=False):
+        customer_id=None, include_in_progress=False, outstanding=False,
+        institution_type=None, transaction_type=None):
 
+        type_kwargs = {}
+        c_type_kwargs = {}
         c_kwargs = {}
         t_kwargs = {}
+
+        if institution_type:
+            type_kwargs['customer__institution__institution_type'] = institution_type
+            c_type_kwargs['institution__institution_type'] = institution_type
+        if transaction_type:
+            type_kwargs['transaction_type'] = transaction_type
+            c_type_kwargs['transaction__transaction_type'] = transaction_type
+
         if in_progress_only:
                 t_kwargs['date_fulfilled'] = None
                 c_kwargs['transaction__date_fulfilled'] = None
@@ -212,11 +223,11 @@ class RoyaltiesManager(models.Manager):
             cid_c_kwargs['id'] = customer_id
 
         transactions_by_date = Transaction.objects.filter(
-            **t_kwargs, **cid_t_kwargs)
+            **t_kwargs, **cid_t_kwargs, **type_kwargs)
 
         if include_in_progress:
             in_progress = Transaction.objects.filter(
-                date_fulfilled__isnull=True, **cid_t_kwargs)
+                date_fulfilled__isnull=True, **cid_t_kwargs, **type_kwargs)
             transactions_by_date = transactions_by_date | in_progress
 
         aggregate_data = transactions_by_date.annotate(
@@ -258,7 +269,7 @@ class RoyaltiesManager(models.Manager):
             c_tx_count=Count('transaction__date', distinct=True)
         )
         customers = customers_annotated.filter(
-            c_tx_count__gt=0, **c_kwargs, **cid_c_kwargs)
+            c_tx_count__gt=0, **c_kwargs, **cid_c_kwargs, **c_type_kwargs)
 
         if include_in_progress:
             in_progress = Customer.objects.annotate(

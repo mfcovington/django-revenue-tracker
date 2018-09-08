@@ -154,9 +154,15 @@ class TransactionList(LoginRequiredMixin, ListView):
         context['tx_date_range'] = tx_date_range
         context['year'] = self.request.GET.get('year', None)
         context['quarter'] = self.request.GET.get('quarter', None)
+        transaction_type = self.request.GET.get('transaction_type', None)
+        institution_type = self.request.GET.get('institution_type', None)
+        context['transaction_type'] = transaction_type
+        context['institution_type'] = institution_type
         context['report'] = Transaction.objects.get_royalties_report(
             from_date=from_date,
-            to_date=to_date)
+            to_date=to_date,
+            institution_type=institution_type,
+            transaction_type=transaction_type)
         context['from_date'] = str(from_date)
         context['to_date'] = str(to_date)
         context['unfulfilled_list'] = Transaction.objects.filter(
@@ -164,8 +170,12 @@ class TransactionList(LoginRequiredMixin, ListView):
         context['report_including_unfulfilled'] = Transaction.objects.get_royalties_report(
             from_date=from_date,
             to_date=to_date,
+            institution_type=institution_type,
+            transaction_type=transaction_type,
             include_in_progress=True)
         context['report_unfulfilled'] = Transaction.objects.get_royalties_report(
+            institution_type=institution_type,
+            transaction_type=transaction_type,
             in_progress_only=True)
         return context
 
@@ -174,6 +184,18 @@ class TransactionList(LoginRequiredMixin, ListView):
         if transaction_date_range == [None, None]:
             return None
         else:
+            type_kwargs = {}
+
+            institution_type = self.request.GET.get('institution_type', None)
+            transaction_type = self.request.GET.get('transaction_type', None)
+
+            if institution_type:
+                type_kwargs['customer__institution__institution_type'] = institution_type
+            if transaction_type:
+                type_kwargs['transaction_type'] = transaction_type
+
             return Transaction.objects.filter(
                 date_fulfilled__gte=transaction_date_range[0],
-                date_fulfilled__lte=transaction_date_range[1])
+                date_fulfilled__lte=transaction_date_range[1],
+                **type_kwargs,
+            )
