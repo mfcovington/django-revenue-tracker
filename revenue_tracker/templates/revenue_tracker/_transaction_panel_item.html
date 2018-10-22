@@ -21,7 +21,7 @@
     {% if transaction.is_prepaid %}
       <small><i class="glyphicon glyphicon-usd" data-toggle="tooltip" data-placement="top" title="{{ transaction.date_paid|timesince }}"></i></small>
     {% endif %}
-    {% if transaction.transaction_type == 'service' and not transaction.date_samples_arrived %}
+    {% if transaction.transaction_type == 'service' and not transaction.date_samples_arrived and transaction.number_of_reactions %}
       <small><i class="glyphicon glyphicon-ban-circle" data-toggle="tooltip" data-placement="top" title="Samples have not yet arrived."></i></small>
     {% endif %}
   </td>
@@ -54,7 +54,13 @@
   {% if transaction_type == 'all' %}
     <td>{{ transaction.get_transaction_type_display }}</td>
   {% endif %}
-  <td>{{ transaction.number_of_reactions }} rxn{{ transaction.number_of_reactions|pluralize }}</td>
+  <td>
+    {% if transaction.number_of_reactions %}
+      {{ transaction.number_of_reactions }} rxn{{ transaction.number_of_reactions|pluralize }}
+    {% else %}
+      -
+    {% endif %}
+  </td>
   <td>
     {% if transaction.quote %}
       <a href="{{ transaction.quote.pdf.url }}" target="_blank">
