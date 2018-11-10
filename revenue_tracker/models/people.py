@@ -1,7 +1,6 @@
 from django.db import models
 
 from customer_tracker.models import Customer as CustomerBase
-from phonenumber_field.modelfields import PhoneNumberField
 
 
 class Customer(CustomerBase):
