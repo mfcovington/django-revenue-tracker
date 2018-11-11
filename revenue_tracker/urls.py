@@ -4,6 +4,9 @@ from .views import (
     CustomerDetail, CustomerList, OutstandingInvoicesList, TransactionDetail,
     TransactionList)
 
+
+app_name = 'revenue_tracker'
+
 urlpatterns = [
     url(r'^customer/$', CustomerList.as_view(), name='customer_list'),
     url(r'^customer/(?P<pk>\d+)/$', CustomerDetail.as_view(), name='customer_detail'),
