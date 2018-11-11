@@ -398,13 +398,13 @@ class Transaction(models.Model):
         verbose_name='Base IP-related price per reaction',
     )
     date = models.DateField()
-    date_fulfilled = models.DateField(
-        blank=True,
-        null=True,
-    )
     date_samples_arrived = models.DateField(
         blank=True,
         help_text='If this is a service transaction, what date did the samples arrive?',
+        null=True,
+    )
+    date_fulfilled = models.DateField(
+        blank=True,
         null=True,
     )
     date_paid = models.DateField(
