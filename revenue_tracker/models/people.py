@@ -39,8 +39,14 @@ class Vendor(models.Model):
         max_length=255,
         unique=True,
     )
-    contact = models.ForeignKey('customer_tracker.Contact')
-    country = models.ForeignKey('customer_tracker.Country')
+    contact = models.ForeignKey(
+        'customer_tracker.Contact',
+        on_delete=models.PROTECT,
+    )
+    country = models.ForeignKey(
+        'customer_tracker.Country',
+        on_delete=models.PROTECT,
+    )
     customers = models.ManyToManyField(
         'Customer',
         through='Transaction',

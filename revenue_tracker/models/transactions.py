@@ -368,11 +368,13 @@ class Transaction(models.Model):
         'Customer',
         blank=True,
         null=True,
+        on_delete=models.PROTECT,
     )
     vendor = models.ForeignKey(
         'Vendor',
         blank=True,
         null=True,
+        on_delete=models.PROTECT,
     )
     number_of_reactions = models.PositiveSmallIntegerField()
     total_price = MoneyField(
@@ -413,18 +415,21 @@ class Transaction(models.Model):
         'Quote',
         blank=True,
         null=True,
+        on_delete=models.SET_NULL,
         related_name='transaction',
     )
     order = models.ForeignKey(
         'Order',
         blank=True,
         null=True,
+        on_delete=models.SET_NULL,
         related_name='transaction',
     )
     invoice = models.ForeignKey(
         'Invoice',
         blank=True,
         null=True,
+        on_delete=models.SET_NULL,
         related_name='transaction',
     )
 
