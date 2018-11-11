@@ -20,7 +20,13 @@
     ">
       <li>{{ transaction.get_transaction_type_display }}</li>
       <li>{{ transaction.number_of_reactions }}</li>
-      <li><a href="{% url 'revenue_tracker:customer_detail' pk=transaction.customer.pk %}">{{ transaction.customer }}</a></li>
+      <li>
+        {% if transaction.customer %}
+          <a href="{% url 'revenue_tracker:customer_detail' pk=transaction.customer.pk %}">{{ transaction.customer }}</a>
+        {% else %}
+          -
+        {% endif %}
+      </li>
       <li>{{ transaction.vendor }}</li>
       <li>{{ transaction.date }}</li>
       <li>{{ transaction.total_price }}</li>
