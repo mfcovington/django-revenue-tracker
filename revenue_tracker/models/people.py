@@ -18,16 +18,16 @@ class Customer(CustomerBase):
     @property
     def reaction_count(self):
         return sum(
-            sum(self.transaction_set.values_list('number_of_reactions'), ()))
+            sum(self.transactions.values_list('number_of_reactions'), ()))
 
     @property
     def total_revenue(self):
         return sum(
-            sum(self.transaction_set.values_list('total_price'), ()))
+            sum(self.transactions.values_list('total_price'), ()))
 
     @property
     def tx_count(self):
-        return len(set(self.transaction_set.values_list('date')))
+        return len(set(self.transactions.values_list('date')))
 
 
 class Vendor(models.Model):

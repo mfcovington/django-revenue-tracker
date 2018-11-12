@@ -55,7 +55,7 @@ class CustomerDetail(LoginRequiredMixin, DetailView):
             to_date=to_date,
             include_in_progress=True,
             customer_id=self.object.pk)
-        context['tx_count'] = len(set(self.object.transaction_set.values_list('date')))
+        context['tx_count'] = len(set(self.object.transactions.values_list('date')))
         return context
 
 

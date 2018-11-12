@@ -198,23 +198,23 @@ class RoyaltiesManager(models.Manager):
             c_type_kwargs['institution__institution_type'] = institution_type
         if transaction_type:
             type_kwargs['transaction_type'] = transaction_type
-            c_type_kwargs['transaction__transaction_type'] = transaction_type
+            c_type_kwargs['transactions__transaction_type'] = transaction_type
 
         if in_progress_only:
                 t_kwargs['date_fulfilled'] = None
-                c_kwargs['transaction__date_fulfilled'] = None
+                c_kwargs['transactions__date_fulfilled'] = None
         elif outstanding:
             t_kwargs['date_fulfilled__isnull'] = False
             t_kwargs['date_paid__isnull'] = True
-            c_kwargs['transaction__date_fulfilled__isnull'] = False
-            c_kwargs['transaction__date_paid__isnull'] = True
+            c_kwargs['transactions__date_fulfilled__isnull'] = False
+            c_kwargs['transactions__date_paid__isnull'] = True
         else:
             if from_date is not None:
                 t_kwargs['date_fulfilled__gte'] = from_date
-                c_kwargs['transaction__date_fulfilled__gte'] = from_date
+                c_kwargs['transactions__date_fulfilled__gte'] = from_date
             if to_date is not None:
                 t_kwargs['date_fulfilled__lte'] = to_date
-                c_kwargs['transaction__date_fulfilled__lte'] = to_date
+                c_kwargs['transactions__date_fulfilled__lte'] = to_date
 
         cid_c_kwargs = {}
         cid_t_kwargs = {}
@@ -266,16 +266,16 @@ class RoyaltiesManager(models.Manager):
         report['sum_royalties_owed'] = float(aggregate_data['ip_related_price__sum']) * ROYALTY_PERCENTAGE
 
         customers_annotated = Customer.objects.annotate(
-            c_tx_count=Count('transaction__date', distinct=True)
+            c_tx_count=Count('transactions__date', distinct=True)
         )
         customers = customers_annotated.filter(
             c_tx_count__gt=0, **c_kwargs, **cid_c_kwargs, **c_type_kwargs)
 
         if include_in_progress:
             in_progress = Customer.objects.annotate(
-                c_tx_count=Count('transaction__date', distinct=True)
+                c_tx_count=Count('transactions__date', distinct=True)
             ).filter(
-                transaction__date_fulfilled__isnull=True,
+                transactions__date_fulfilled__isnull=True,
                 c_tx_count__gt=0, **cid_c_kwargs)
             customers = customers | in_progress
 
@@ -329,15 +329,15 @@ class RoyaltiesManager(models.Manager):
         for subreport in by_type:
             t_type = subreport['transaction_type']
             customers_by_type = customers.filter(
-                transaction__transaction_type=t_type, **c_kwargs,
+                transactions__transaction_type=t_type, **c_kwargs,
                 **cid_c_kwargs)
 
             if include_in_progress:
                 in_progress = Customer.objects.annotate(
-                    c_tx_count=Count('transaction__date', distinct=True)
+                    c_tx_count=Count('transactions__date', distinct=True)
                 ).filter(
-                    transaction__transaction_type=t_type,
-                    transaction__date_fulfilled__isnull=True, **cid_c_kwargs)
+                    transactions__transaction_type=t_type,
+                    transactions__date_fulfilled__isnull=True, **cid_c_kwargs)
                 customers_by_type = customers_by_type.distinct() | in_progress.distinct()
 
             repeat_customers_by_type = customers_by_type.filter(c_tx_count__gt=1)
@@ -369,12 +369,14 @@ class Transaction(models.Model):
         blank=True,
         null=True,
         on_delete=models.PROTECT,
+        related_name='transactions',
     )
     vendor = models.ForeignKey(
         'Vendor',
         blank=True,
         null=True,
         on_delete=models.PROTECT,
+        related_name='transactions',
     )
     number_of_reactions = models.PositiveSmallIntegerField()
     total_price = MoneyField(
