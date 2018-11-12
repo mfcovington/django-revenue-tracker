@@ -71,24 +71,34 @@ class TransactionInline(admin.StackedInline):
     model = Transaction
 
 
+class TransactionDocumentAdmin(admin.ModelAdmin):
+    list_display = [
+        'number',
+        'date',
+        'pdf',
+    ]
+    inlines = [TransactionInline]
+    save_on_top = True
+
+
 @admin.register(BasePrice)
 class BasePriceAdmin(admin.ModelAdmin):
     save_on_top = True
 
 
 @admin.register(Quote)
-class QuoteAdmin(admin.ModelAdmin):
-    save_on_top = True
+class QuoteAdmin(TransactionDocumentAdmin):
+    pass
 
 
 @admin.register(Order)
-class OrderAdmin(admin.ModelAdmin):
-    save_on_top = True
+class OrderAdmin(TransactionDocumentAdmin):
+    pass
 
 
 @admin.register(Invoice)
-class InvoiceAdmin(admin.ModelAdmin):
-    save_on_top = True
+class InvoiceAdmin(TransactionDocumentAdmin):
+    pass
 
 
 @admin.register(Transaction)
