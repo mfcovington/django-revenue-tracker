@@ -416,21 +416,21 @@ class Transaction(models.Model):
         blank=True,
         null=True,
         on_delete=models.SET_NULL,
-        related_name='transaction',
+        related_name='transactions',
     )
     order = models.ForeignKey(
         'Order',
         blank=True,
         null=True,
         on_delete=models.SET_NULL,
-        related_name='transaction',
+        related_name='transactions',
     )
     invoice = models.ForeignKey(
         'Invoice',
         blank=True,
         null=True,
         on_delete=models.SET_NULL,
-        related_name='transaction',
+        related_name='transactions',
     )
 
     description = models.TextField(
