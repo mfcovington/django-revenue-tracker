@@ -34,7 +34,7 @@
             <a href="mailto:{{ customer.contact.email }}"><small><i class="glyphicon glyphicon-envelope"></i></small></a>
           </td>
           <td>{{ customer.institution_type }}</td>
-          <td>{{ customer.transaction_set.count }}</td>
+          <td>{{ customer.transactions.count }}</td>
         </tr>
       {% endfor %}
     </tbody>
