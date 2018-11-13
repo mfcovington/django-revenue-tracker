@@ -32,15 +32,7 @@
   {% endif %}
   <td>
     {% if transaction.project %}
-      <a class="btn btn-xs
-        {% if transaction.project.bootstrap_color_class == 'secondary' %}
-          btn-default
-        {% elif transaction.project.bootstrap_color_class == 'dark' %}
-          btn-primary
-        {% else %}
-          btn-{{ transaction.project.bootstrap_color_class }}
-        {% endif %}
-      " href="{% url 'ngs_project_tracker:project_detail' transaction.project.pk %}">{{ transaction.project.code }}</a>
+      <a class="btn btn-xs btn-info" href="{% url 'ngs_project_tracker:project_detail' transaction.project.pk %}">{{ transaction.project.code }}</a>
     {% elif transaction.transaction_type == 'service' %}
       <a class="btn btn-xs btn-success" href="{% url 'ngs_project_tracker:project_create' %}?owner={{ transaction.customer.pk }}&amp;transaction={{ transaction.pk }}"><i class="glyphicon glyphicon-plus"></i></a>
     {% else %}
