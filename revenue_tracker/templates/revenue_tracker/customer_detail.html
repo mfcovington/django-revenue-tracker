@@ -41,18 +41,25 @@
       {% endif %}
 
       {% if customer.contact %}
+        <div>
           <i class="glyphicon glyphicon-user"></i>:
-        {{ customer.contact.name }}
-        {% if customer.contact.email %}
-          <a href="mailto:{{ customer.contact.email }}"><i class="glyphicon glyphicon glyphicon-envelope"></i></a>
-        {% endif %}
-        {% if customer.contact.website %}
-          <a href="{{ customer.contact.website }}" target="_blank"><i class="glyphicon glyphicon-share-alt"></i></a>
-        {% endif %}
-        {% if customer.contact.phone %}
-          <br>
-          <i class="glyphicon glyphicon-earphone"></i>: {{ customer.contact.phone.as_international }}
-        {% endif %}
+          {{ customer.contact.name }}
+          {% if customer.contact.email %}
+            <a href="mailto:{{ customer.contact.email }}"><i class="glyphicon glyphicon glyphicon-envelope"></i></a>
+          {% endif %}
+          {% if customer.contact.website %}
+            <a href="{{ customer.contact.website }}" target="_blank"><i class="glyphicon glyphicon-share-alt"></i></a>
+          {% endif %}
+          {% if customer.contact.phone %}
+            <br>
+            <i class="glyphicon glyphicon-earphone"></i>: {{ customer.contact.phone.as_international }}
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% if customer.projects.count > 0 %}
+        <br>
+        <a class="btn btn-primary" href="{% url 'ngs_project_tracker:project_list' projectowner_pk=customer.pk %}">View '{{ customer.code }}' Projects</a>
       {% endif %}
     </div>
 
