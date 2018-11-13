@@ -128,6 +128,7 @@ class TransactionAdmin(admin.ModelAdmin):
     readonly_fields = ['base_ip_related_price_per_reaction']
     save_on_top = True
     search_fields = [
+        'customer__code',
         'customer__name',
         'customer__institution__name',
         'customer__contact__name',
