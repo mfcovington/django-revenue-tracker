@@ -41,8 +41,10 @@
           btn-{{ transaction.project.bootstrap_color_class }}
         {% endif %}
       " href="{% url 'ngs_project_tracker:project_detail' transaction.project.pk %}">{{ transaction.project.code }}</a>
+    {% elif transaction.transaction_type == 'service' %}
+      <a class="btn btn-xs btn-success" href="{% url 'ngs_project_tracker:project_create' %}?owner={{ transaction.customer.pk }}&amp;transaction={{ transaction.pk }}">+</a>
     {% else %}
-        -
+      -
     {% endif %}
   </td>
   <td>{{ transaction.date }}</td>
