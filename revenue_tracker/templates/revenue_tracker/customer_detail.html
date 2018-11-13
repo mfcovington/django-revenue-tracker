@@ -9,6 +9,15 @@
 
   <div class="container">
 
+    <ol class="breadcrumb">
+      {% if django_project_home_url %}
+        <li><a href="{{ django_project_home_url }}">Home</a></li>
+      {% endif %}
+      <li><a href="{% url 'revenue_tracker:transaction_list' %}">Transactions</a></li>
+      <li><a href="{% url 'revenue_tracker:customer_list' %}">Customers</a></li>
+      <li class="active">{{ customer }}</li>
+    </ol>
+
     <a name='summary'></a>
     <div class="jumbotron">
       <h3>

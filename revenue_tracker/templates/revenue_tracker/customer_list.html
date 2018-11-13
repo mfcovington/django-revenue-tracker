@@ -8,10 +8,13 @@
 
   <div class="container">
 
-    <a name='summary'></a>
-    <div class="jumbotron">
-      <h1>Customers</h1>
-    </div>
+    <ol class="breadcrumb">
+      {% if django_project_home_url %}
+        <li><a href="{{ django_project_home_url }}">Home</a></li>
+      {% endif %}
+      <li><a href="{% url 'revenue_tracker:transaction_list' %}">Transactions</a></li>
+      <li class="active">Customers</li>
+    </ol>
 
     {% include "revenue_tracker/_customer_panel.html" with panel_type="primary" customer_list=customer_list anchor="all-customers" panel_title="" %}
 
