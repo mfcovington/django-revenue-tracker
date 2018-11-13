@@ -109,6 +109,7 @@ class TransactionAdmin(admin.ModelAdmin):
         'vendor',
         'transaction_type',
         'number_of_reactions',
+        'project',
         'date_samples_arrived',
         'date_fulfilled',
         'date_paid',

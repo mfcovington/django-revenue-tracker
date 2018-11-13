@@ -5,6 +5,7 @@ from django.db import models
 from django.db.models import Count, F, ExpressionWrapper, Sum
 
 from djmoney.models.fields import MoneyField
+from ngs_project_tracker.models import Project
 
 from ..models import Customer
 
@@ -359,6 +360,14 @@ class Transaction(models.Model):
 
     class Meta:
         ordering = ['-date', 'customer']
+
+    project = models.ForeignKey(
+        Project,
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name='transactions',
+    )
 
     transaction_type = models.CharField(
         choices=TRANSACTION_TYPE_CHOICES,

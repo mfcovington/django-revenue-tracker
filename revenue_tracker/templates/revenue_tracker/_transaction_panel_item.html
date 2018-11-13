@@ -30,6 +30,21 @@
       {{ transaction.date_fulfilled|timesince }}
     </td>
   {% endif %}
+  <td>
+    {% if transaction.project %}
+      <a class="btn btn-sm
+        {% if transaction.project.bootstrap_color_class == 'secondary' %}
+          btn-default
+        {% elif transaction.project.bootstrap_color_class == 'dark' %}
+          btn-primary
+        {% else %}
+          btn-{{ transaction.project.bootstrap_color_class }}
+        {% endif %}
+      " href="{% url 'ngs_project_tracker:project_detail' transaction.project.pk %}">{{ transaction.project.code }}</a>
+    {% else %}
+        -
+    {% endif %}
+  </td>
   <td>{{ transaction.date }}</td>
   <td>{{ transaction.date_fulfilled|default:"-" }}</td>
   {% if not customer %}
