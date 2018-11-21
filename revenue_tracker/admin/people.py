@@ -22,6 +22,10 @@ class CustomerAdmin(CustomerAdmin):
         'website',
     ]
 
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.filter(transactions__isnull=True).distinct()
+
 
 @admin.register(Vendor)
 class VendorAdmin(admin.ModelAdmin):
