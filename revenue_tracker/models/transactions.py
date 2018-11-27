@@ -261,9 +261,12 @@ class RoyaltiesManager(models.Manager):
         report['sum_ip_related_price'] = aggregate_data['ip_related_price__sum']
         report['sum_ip_related_gross_price'] = aggregate_data['ip_related_gross_price__sum']
         report['sum_ip_related_discount'] = aggregate_data['ip_related_discount__sum']
-        report['sum_ip_related_discount_pct'] = (
-            aggregate_data['ip_related_discount__sum']
-            / aggregate_data['ip_related_gross_price__sum'])
+        try:
+            report['sum_ip_related_discount_pct'] = (
+                aggregate_data['ip_related_discount__sum']
+                / aggregate_data['ip_related_gross_price__sum'])
+        except:
+            report['sum_ip_related_discount_pct'] = 0
         report['sum_royalties_owed'] = float(aggregate_data['ip_related_price__sum']) * ROYALTY_PERCENTAGE
 
         customers_annotated = Customer.objects.annotate(
@@ -484,8 +487,11 @@ class Transaction(models.Model):
         elif self.number_of_reactions == 0:
             return '-'
         else:
-            return (self.ip_related_discount
-                / (self.ip_related_price + self.ip_related_discount))
+            try:
+                return (self.ip_related_discount
+                    / (self.ip_related_price + self.ip_related_discount))
+            except:
+                return '-'
 
     @property
     def ip_related_gross_price(self):
