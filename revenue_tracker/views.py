@@ -143,8 +143,13 @@ class TransactionList(LoginRequiredMixin, ListView):
             if to_date is None:
                 to_date = datetime.date.today()
 
-        first_date = dates_fulfilled['date_fulfilled__min']
-        last_date = dates_fulfilled['date_fulfilled__max']
+        if isinstance(from_date, str):
+            from_date = datetime.date(*[int(d) for d in from_date.split('-')])
+        if isinstance(to_date, str):
+            to_date = datetime.date(*[int(d) for d in to_date.split('-')])
+
+        first_date = dates_fulfilled['date_fulfilled__min'] or from_date
+        last_date = dates_fulfilled['date_fulfilled__max'] or to_date
 
         return [from_date, to_date, first_date, last_date]
 
