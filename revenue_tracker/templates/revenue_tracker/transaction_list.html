@@ -9,10 +9,13 @@
 
   <div class="container">
 
-    <ol class="breadcrumb">
-      {% project_home_breadcrumb_bs3 %}
-      <li class="active">Transactions</li>
-    </ol>
+    {% project_home_url as project_home_url %}
+    {% if project_home_url %}
+      <ol class="breadcrumb">
+        {% project_home_breadcrumb_bs3 %}
+        <li class="active">Transactions</li>
+      </ol>
+    {% endif %}
 
     <a name='summary'></a>
     <div class="jumbotron">
