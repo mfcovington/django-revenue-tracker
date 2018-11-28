@@ -1,0 +1,26 @@
+{% extends "revenue_tracker/base.html" %}
+{% load project_home %}
+
+{% block title %}
+  Pending Transactions | {{ block.super }}
+{% endblock %}
+
+{% block content %}
+
+  <div class="container">
+
+    <ol class="breadcrumb">
+      {% project_home_breadcrumb_bs3 %}
+      <li><a href="{% url 'revenue_tracker:transaction_list' %}">Transactions</a></li>
+      <li class="active">Pending Transactions</li>
+    </ol>
+
+    <h2>Transaction Summary</h2>
+    {% include "revenue_tracker/_transaction_summary_panel.html" with panel_type="danger" full_report=report anchor="pending-transaction-summary" panel_title="Pending" %}
+
+    <h2>Transactions</h2>
+    {% include "revenue_tracker/_transaction_panel.html" with panel_type="danger" transaction_list=transaction_list transaction_type="all" anchor="pending-transactions" panel_title="Pending" %}
+
+  </div>
+
+{% endblock %}

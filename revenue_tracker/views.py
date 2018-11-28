@@ -82,6 +82,21 @@ class OutstandingInvoicesList(LoginRequiredMixin, ListView):
             ).order_by('date_fulfilled')
 
 
+class PendingTransactionsList(LoginRequiredMixin, ListView):
+    context_object_name = 'transaction_list'
+    model = Transaction
+    template_name = 'revenue_tracker/pending_transactions_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['report'] = Transaction.objects.get_royalties_report(
+            in_progress_only=True)
+        return context
+
+    def get_queryset(self):
+        return Transaction.objects.filter(date_fulfilled=None)
+
+
 class TransactionDetail(LoginRequiredMixin, DetailView):
     context_object_name = 'transaction'
     model = Transaction

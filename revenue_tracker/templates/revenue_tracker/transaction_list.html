@@ -30,8 +30,11 @@
         {% endfor %}
         <br>
         <br>
-        <button class="btn btn-info" id="toggle-in-progress">Show Pending Transactions</button>
         <a class="btn btn-info" href="{% url 'revenue_tracker:outstanding_invoices_list' %}">Outstanding Invoices</a>
+        <div class="btn-group" role="group" aria-label="Pending">
+          <a href="{% url 'revenue_tracker:pending_transactions_list' %}" class="btn btn-info">Pending Transactions</a>
+          <button class="btn btn-info" id="toggle-in-progress">Show</button>
+        </div>
       </div>
 
       <div class="well">
@@ -139,7 +142,8 @@
         $('.in-progress').toggle();
         var text = $('#toggle-in-progress').text();
         $('#toggle-in-progress').text(
-          text == "Show Pending Transactions" ? "Hide Pending Transactions" : "Show Pending Transactions");
+          text == "Show" ? "Hide" : "Show");
+          // text == "Show Pending Transactions" ? "Hide Pending Transactions" : "Show Pending Transactions");
       });
 
       if ('{{ year }}') {
