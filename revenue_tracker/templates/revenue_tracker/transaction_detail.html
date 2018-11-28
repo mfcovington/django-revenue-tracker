@@ -1,5 +1,5 @@
 {% extends "revenue_tracker/base.html" %}
-{% load humanize %}
+{% load humanize project_home %}
 
 {% block title %}
   {{ transaction }} | {{ block.super }}
@@ -10,9 +10,7 @@
   <div class="container">
 
     <ol class="breadcrumb">
-      {% if django_project_home_url %}
-        <li><a href="{{ django_project_home_url }}">Home</a></li>
-      {% endif %}
+      {% project_home_breadcrumb_bs3 %}
       <li><a href="{% url 'revenue_tracker:transaction_list' %}">Transactions</a></li>
       <li><a href="{% url 'revenue_tracker:customer_list' %}">Customers</a></li>
       <li><a href="{% url 'revenue_tracker:customer_list' %}">{{ transaction.customer }}</a></li>
