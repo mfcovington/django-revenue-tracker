@@ -89,12 +89,31 @@ class PendingTransactionsList(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        transaction_type = self.request.GET.get('transaction_type', None)
+        institution_type = self.request.GET.get('institution_type', None)
+        context['transaction_type'] = transaction_type
+        context['institution_type'] = institution_type
         context['report'] = Transaction.objects.get_royalties_report(
-            in_progress_only=True)
+            in_progress_only=True,
+            institution_type=institution_type,
+            transaction_type=transaction_type,
+        )
         return context
 
     def get_queryset(self):
-        return Transaction.objects.filter(date_fulfilled=None)
+        institution_type = self.request.GET.get('institution_type', None)
+        transaction_type = self.request.GET.get('transaction_type', None)
+
+        type_kwargs = {}
+        if institution_type:
+            type_kwargs['customer__institution__institution_type'] = institution_type
+        if transaction_type:
+            type_kwargs['transaction_type'] = transaction_type
+
+        return Transaction.objects.filter(
+            date_fulfilled=None,
+            **type_kwargs,
+        )
 
 
 class TransactionDetail(LoginRequiredMixin, DetailView):

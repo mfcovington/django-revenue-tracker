@@ -15,6 +15,15 @@
       <li class="active">Pending Transactions</li>
     </ol>
 
+    <div class="well">
+      <form method="get" class="form-inline">
+        {% include "revenue_tracker/_type_filters.html" %}
+        &nbsp;&nbsp;
+        <br>
+        {% include "revenue_tracker/_submit_filters.html" %}
+      </form>
+    </div>
+
     <h2>Transaction Summary</h2>
     {% include "revenue_tracker/_transaction_summary_panel.html" with panel_type="danger" full_report=report anchor="pending-transaction-summary" panel_title="Pending" %}
 
@@ -24,3 +33,15 @@
   </div>
 
 {% endblock %}
+
+{% block footer %}
+  <script type="text/javascript">
+    $(document).ready(function(){
+      var $institution_radios = $('input:radio[name=institution_type]');
+      $institution_radios.filter('[value={{ institution_type }}]').click();
+
+      var $transaction_radios = $('input:radio[name=transaction_type]');
+      $transaction_radios.filter('[value={{ transaction_type }}]').click();
+    });
+  </script>
+{% endblock footer %}
