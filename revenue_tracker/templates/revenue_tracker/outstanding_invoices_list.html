@@ -16,10 +16,10 @@
     </ol>
 
     <h2>Transaction Summary</h2>
-    {% include "revenue_tracker/_transaction_summary_panel.html" with panel_type="primary" full_report=report anchor="completed-transaction-summary" panel_title="Completed and Unpaid" %}
+    {% include "revenue_tracker/_transaction_summary_panel.html" with panel_type="primary" full_report=report anchor="outstanding-invoice-summary" panel_title="Completed and Unpaid" %}
 
     <h2>Transactions</h2>
-    {% include "revenue_tracker/_transaction_panel.html" with panel_type="primary" transaction_list=transaction_list transaction_type="all" anchor="completed-transactions" panel_title="Completed and Unpaid" %}
+    {% include "revenue_tracker/_transaction_panel.html" with panel_type="primary" transaction_list=transaction_list transaction_type="all" anchor="outstanding-invoices" panel_title="Completed and Unpaid" %}
 
   </div>
 
