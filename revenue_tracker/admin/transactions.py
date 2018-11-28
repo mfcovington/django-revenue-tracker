@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.http import HttpResponseRedirect
 
+from ngs_project_tracker.models import Project
+
 from ..models import BasePrice, Invoice, Order, Quote, Transaction
 from ..models import Customer
 
@@ -139,14 +141,21 @@ class TransactionAdmin(admin.ModelAdmin):
     ]
 
     def get_changeform_initial_data(self, request):
-        customer_pk = request.GET.get('customer_pk')
+        initial = super().get_changeform_initial_data(request)
+
         try:
-            customer = Customer.objects.get(pk=customer_pk)
+            initial['project'] = Project.objects.get(
+                pk=request.GET.get('project_pk'))
         except:
-            customer = None
-        return {
-            'customer': customer,
-        }
+            pass
+
+        try:
+            initial['customer'] = Customer.objects.get(
+                pk=request.GET.get('customer_pk'))
+        except:
+            pass
+
+        return initial
 
     def response_add(self, request, obj, post_url_continue=None):
         result = super().response_add(request, obj, post_url_continue)
