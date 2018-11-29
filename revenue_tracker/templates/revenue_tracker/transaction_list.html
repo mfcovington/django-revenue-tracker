@@ -1,0 +1,164 @@
+{% extends "revenue_tracker/base.html" %}
+{% load project_home %}
+
+{% block title %}
+  Transactions | {{ block.super }}
+{% endblock %}
+
+{% block content %}
+
+  <div class="container">
+
+    {% project_home_url as project_home_url %}
+    {% if project_home_url %}
+      <ol class="breadcrumb">
+        {% project_home_breadcrumb_bs3 %}
+        <li class="active">Transactions</li>
+      </ol>
+    {% endif %}
+
+    <a name='summary'></a>
+    <div class="jumbotron">
+      <h1>Transaction Report</h1>
+      <div class="well">
+        {% for year, quarters in tx_date_range.items %}
+          <div class="btn-group">
+            <button class="btn btn-lg btn-success" id="{{ year }}" onclick="filter_by_period(year={{ year }})">{{ year }}</button>
+            {% for q_num in "1234" %}
+              {% with Q="Q"|add:q_num %}
+                <button class="btn btn-lg btn-default {% if Q not in quarters %}disabled{% endif %}" id="{{ year }}-{{ Q }}" {% if Q in quarters %}onclick="filter_by_period(year={{ year }}, quarter='{{ Q }}')"{% endif %}>{{ Q }}</button>
+              {% endwith %}
+            {% endfor %}
+          </div>
+        {% endfor %}
+        <br>
+        <br>
+        <a class="btn btn-info" href="{% url 'revenue_tracker:outstanding_invoices_list' %}">Outstanding Invoices</a>
+        <div class="btn-group" role="group" aria-label="Pending">
+          <a href="{% url 'revenue_tracker:pending_transactions_list' %}" class="btn btn-info">Pending Transactions</a>
+          <button class="btn btn-info" id="toggle-in-progress">Show</button>
+        </div>
+      </div>
+
+      <div class="well">
+        <form method="get" class="form-inline">
+          <div class="form-row">
+            <div class="form-group">
+              <div class='input-group date' id='from_date_picker'>
+                <span class="input-group-addon">From</span>
+                <input id="from_date" class="form-control" name="from_date" type='text' value="{{ from_date }}">
+                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class='input-group date' id='to_date_picker'>
+                <span class="input-group-addon">To</span>
+                <input id="to_date" class="form-control" name="to_date" type='text' value="{{ to_date }}">
+                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="btn-group">
+                <a id="last-365" class="btn btn-default" onclick="set_date_range_since(days=365)"><small>-365</small></a>
+                <a id="last-90" class="btn btn-default" onclick="set_date_range_since(days=90)"><small>-90</small></a>
+                <a id="last-30" class="btn btn-default" onclick="set_date_range_since(days=30)"><small>-30</small></a>
+              </div>
+            </div>
+          </div>
+
+          &nbsp;&nbsp;
+          <br>
+          {% include "revenue_tracker/_type_filters.html" %}
+          &nbsp;&nbsp;
+          <br>
+          {% include "revenue_tracker/_submit_filters.html" %}
+        </form>
+      </div>
+
+    </div>
+
+    <h2>Transaction Summary</h2>
+    <div class="in-progress" style="display: none;">
+      {% include "revenue_tracker/_transaction_summary_panel.html" with panel_type="danger" full_report=report_unfulfilled anchor="pending-transaction-summary" panel_title="Pending" %}
+      {% include "revenue_tracker/_transaction_summary_panel.html" with panel_type="info" full_report=report_including_unfulfilled anchor="completed-and-pending-transaction-summary" panel_title="Completed & Pending" %}
+    </div>
+    {% include "revenue_tracker/_transaction_summary_panel.html" with panel_type="primary" full_report=report anchor="completed-transaction-summary" panel_title="Completed" %}
+    <h2>
+      Transactions
+      <small><a href="{% url 'admin:revenue_tracker_transaction_add' %}?next={% url 'revenue_tracker:transaction_list' %}"><i class="glyphicon glyphicon-plus-sign"></i></a></small>
+    </h2>
+    <div class="in-progress" style="display: none;">
+      {% include "revenue_tracker/_transaction_panel.html" with panel_type="danger" transaction_list=unfulfilled_list transaction_type="all" anchor="pending-transactions" panel_title="Pending" %}
+    </div>
+    {% include "revenue_tracker/_transaction_panel.html" with panel_type="primary" transaction_list=transaction_list transaction_type="all" anchor="completed-transactions" panel_title="Completed" %}
+
+  </div>
+
+{% endblock %}
+
+{% block footer %}
+  <script type="text/javascript">
+    $(function () {
+      $('#from_date_picker').datetimepicker({
+        useCurrent: false,
+        format: 'YYYY-MM-DD',
+      });
+      $('#to_date_picker').datetimepicker({
+        useCurrent: false, //Important! See issue #1075
+        format: 'YYYY-MM-DD',
+      });
+      $("#from_date_picker").on("dp.change", function (e) {
+        $('#to_date_picker').data("DateTimePicker").minDate(e.date);
+      });
+      $("#to_date_picker").on("dp.change", function (e) {
+        $('#from_date_picker').data("DateTimePicker").maxDate(e.date);
+      });
+    });
+
+    $(document).ready(function(){
+      $('#toggle-in-progress').on('click', function(event) {
+        $('.in-progress').toggle();
+        var text = $('#toggle-in-progress').text();
+        $('#toggle-in-progress').text(
+          text == "Show" ? "Hide" : "Show");
+          // text == "Show Pending Transactions" ? "Hide Pending Transactions" : "Show Pending Transactions");
+      });
+
+      if ('{{ year }}') {
+        $('#{{ year }}').addClass('active');
+        if ('{{ quarter }}') {
+          $('#{{ year }}-{{ quarter }}').addClass('active');
+        } else {
+          $('#{{ year }}-Q1').addClass('active');
+          $('#{{ year }}-Q2').addClass('active');
+          $('#{{ year }}-Q3').addClass('active');
+          $('#{{ year }}-Q4').addClass('active');
+        }
+      }
+
+      var $institution_radios = $('input:radio[name=institution_type]');
+      $institution_radios.filter('[value={{ institution_type }}]').click();
+
+      var $transaction_radios = $('input:radio[name=transaction_type]');
+      $transaction_radios.filter('[value={{ transaction_type }}]').click();
+
+      // Set min/max dates for date picker on page load
+      $('#from_date_picker').data("DateTimePicker").maxDate("{{ to_date }}");
+      $('#to_date_picker').data("DateTimePicker").minDate("{{ from_date }}");
+    });
+
+    function filter_by_period(year, quarter="") {
+         location.href = {% url 'revenue_tracker:transaction_list' %} + "?year=" + year + "&quarter=" + quarter;
+    }
+
+    function set_date_range_since(days) {
+      var now_minus_days = Date.now() + (-days * 24 * 3600 * 1000);
+      var now = Date.now();
+      $( "#from_date" ).val(new Date(now_minus_days).toISOString().substr(0, 10));
+      $( "#to_date" ).val(new Date(now).toISOString().substr(0, 10));
+      $( "#filter-transactions" ).click()
+    }
+  </script>
+{% endblock footer %}

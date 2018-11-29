@@ -1,0 +1,25 @@
+{% load get_verbose_transaction_type humanize %}
+
+<tr>
+  <td>
+    {% if item.transaction_type %}
+      {{ item.transaction_type|get_verbose_transaction_type }}
+    {% endif %}
+  </td>
+  {% if not customer %}
+    <td>{{ item.customer_count }} ({% widthratio item.repeat_customer_pct 1 100 %}%)</td>
+  {% endif %}
+  <td>${{ item.sum_total_price|floatformat:2|intcomma }}</td>
+  <td>{{ item.sum_number_of_reactions|intcomma }}</td>
+  <td>
+    {% if item.sum_number_of_reactions %}
+      ${{ item.average_total_price_per_reaction|floatformat:2|intcomma }}
+    {% else %}
+      -
+    {% endif %}
+  </td>
+  <td>${{ item.sum_ip_related_price|floatformat:2|intcomma }}</td>
+  <td>${{ item.sum_ip_related_gross_price|floatformat:2|intcomma }}</td>
+  <td>${{ item.sum_ip_related_discount|floatformat:2|intcomma }} ({% widthratio item.sum_ip_related_discount_pct 1 100 %}%)</td>
+  <td>${{ item.sum_royalties_owed|floatformat:2|intcomma }}</td>
+</tr>

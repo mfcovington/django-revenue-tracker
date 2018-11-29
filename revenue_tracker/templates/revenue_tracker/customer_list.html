@@ -1,0 +1,22 @@
+{% extends "revenue_tracker/base.html" %}
+{% load project_home %}
+
+{% block title %}
+  Customers | {{ block.super }}
+{% endblock %}
+
+{% block content %}
+
+  <div class="container">
+
+    <ol class="breadcrumb">
+      {% project_home_breadcrumb_bs3 %}
+      <li><a href="{% url 'revenue_tracker:transaction_list' %}">Transactions</a></li>
+      <li class="active">Customers</li>
+    </ol>
+
+    {% include "revenue_tracker/_customer_panel.html" with panel_type="primary" customer_list=customer_list anchor="all-customers" panel_title="" %}
+
+  </div>
+
+{% endblock %}

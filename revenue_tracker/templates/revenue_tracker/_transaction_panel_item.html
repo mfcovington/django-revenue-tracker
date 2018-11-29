@@ -1,0 +1,110 @@
+<tr class="
+  {% if transaction.transaction_type == 'kit' %}
+    alert-success
+  {% elif transaction.transaction_type == 'service' %}
+    alert-info
+  {% elif transaction.transaction_type == 'other' %}
+    alert-warning
+  {% endif %}
+">
+  <td>
+    {% if not customer %}
+      {% if transaction.customer.is_repeat_customer %}
+        {% include "revenue_tracker/_repeat_customer_stats.html" with customer=transaction.customer %}
+      {% endif %}
+    {% endif %}
+    {% if not outstanding %}
+      {% if transaction.is_outstanding %}
+        <small><i class="glyphicon glyphicon-hourglass" data-toggle="tooltip" data-placement="top" title="{{ transaction.date_fulfilled|timesince }}"></i></small>
+      {% endif %}
+    {% endif %}
+    {% if transaction.is_prepaid %}
+      <small><i class="glyphicon glyphicon-usd" data-toggle="tooltip" data-placement="top" title="{{ transaction.date_paid|timesince }}"></i></small>
+    {% endif %}
+    {% if transaction.transaction_type == 'service' and not transaction.date_samples_arrived and transaction.number_of_reactions %}
+      <small><i class="glyphicon glyphicon-ban-circle" data-toggle="tooltip" data-placement="top" title="Samples have not yet arrived."></i></small>
+    {% endif %}
+  </td>
+  {% if outstanding %}
+    <td>
+      {{ transaction.date_fulfilled|timesince }}
+    </td>
+  {% endif %}
+  <td>
+    {% if transaction.project %}
+      <a class="btn btn-xs btn-info" href="{% url 'ngs_project_tracker:project_detail' transaction.project.pk %}">{{ transaction.project.code }}</a>
+    {% elif transaction.transaction_type == 'service' %}
+      <a class="btn btn-xs btn-success" href="{% url 'ngs_project_tracker:project_create' %}?owner={{ transaction.customer.pk }}&amp;transaction={{ transaction.pk }}&amp;sample_number={{ transaction.number_of_reactions }}&amp;start_date={{ transaction.date_samples_arrived|date:'Y-m-d' }}"><i class="glyphicon glyphicon-plus"></i></a>
+    {% else %}
+      -
+    {% endif %}
+  </td>
+  <td>{{ transaction.date }}</td>
+  <td>{{ transaction.date_fulfilled|default:"-" }}</td>
+  {% if not customer %}
+    <td>
+      {% if transaction.customer %}
+        <a href="{% url 'revenue_tracker:customer_detail' pk=transaction.customer.pk %}">{{ transaction.customer }}</a>
+      {% else %}
+        -
+      {% endif %}
+      {% if transaction.customer.website %}
+        <a href="{{ transaction.customer.website }}"><i class="glyphicon glyphicon-share-alt"></i></a>
+      {% endif %}
+    </td>
+  {% endif %}
+  <td>
+    {% if transaction.vendor.website %}
+      <a href="{{ transaction.vendor.website }}" target="_blank">{{ transaction.vendor }}</a>
+    {% else %}
+      {{ transaction.vendor|default:"-" }}
+    {% endif %}
+  </td>
+  {% if transaction_type == 'all' %}
+    <td>{{ transaction.get_transaction_type_display }}</td>
+  {% endif %}
+  <td>
+    {% if transaction.number_of_reactions %}
+      {{ transaction.number_of_reactions }} rxn{{ transaction.number_of_reactions|pluralize }}
+    {% else %}
+      -
+    {% endif %}
+  </td>
+  <td>
+    {% if transaction.quote %}
+      <a href="{{ transaction.quote.pdf.url }}" target="_blank">
+        {{ transaction.quote.number }}
+      </a>
+    {% else %}
+      -
+    {% endif %}
+  </td>
+  <td>
+    {% if transaction.order %}
+      <a href="{{ transaction.order.pdf.url }}" target="_blank">
+        {{ transaction.order.number }}
+      </a>
+    {% else %}
+      -
+    {% endif %}
+  </td>
+  <td>
+    {% if transaction.invoice %}
+      <a href="{{ transaction.invoice.pdf.url }}" target="_blank">
+        {{ transaction.invoice.number }}
+      </a>
+    {% else %}
+      -
+    {% endif %}
+  </td>
+  <td>{{ transaction.total_price }}</td>
+  <td>{{ transaction.price_per_sample }}</td>
+  <td>{{ transaction.ip_related_price }}</td>
+  <td>{{ transaction.ip_related_gross_price }}</td>
+  <td>{{ transaction.ip_related_discount }} ({% widthratio transaction.ip_related_discount_pct 1 100 %}%)</td>
+  <td>{{ transaction.royalties_owed }}</td>
+  <td>
+    <a href="{% url 'revenue_tracker:transaction_detail' pk=transaction.pk %}"><i class="glyphicon glyphicon-info-sign"></i></a>
+    <a href="{% url 'admin:revenue_tracker_transaction_change' transaction.pk %}?next={% if customer %}{% url 'revenue_tracker:customer_detail' pk=customer.pk %}{% else %}{% url 'revenue_tracker:transaction_list' %}{% endif %}"><i class="glyphicon glyphicon-pencil"></i></a>
+  </td>
+</tr>

@@ -1,0 +1,54 @@
+{% extends "revenue_tracker/base.html" %}
+{% load humanize project_home %}
+
+{% block title %}
+  {{ transaction }} | {{ block.super }}
+{% endblock %}
+
+{% block content %}
+
+  <div class="container">
+
+    <ol class="breadcrumb">
+      {% project_home_breadcrumb_bs3 %}
+      <li><a href="{% url 'revenue_tracker:transaction_list' %}">Transactions</a></li>
+      <li><a href="{% url 'revenue_tracker:customer_list' %}">Customers</a></li>
+      <li><a href="{% url 'revenue_tracker:customer_list' %}">{{ transaction.customer }}</a></li>
+      <li class="active">{{ transaction.date }}</li>
+    </ol>
+
+    <ul class="
+      {% if transaction.transaction_type == 'kit' %}
+        alert-success
+      {% elif transaction.transaction_type == 'service' %}
+        alert-info
+      {% elif transaction.transaction_type == 'other' %}
+        alert-warning
+      {% endif %}
+    ">
+      <li>{{ transaction.get_transaction_type_display }}</li>
+      <li>{{ transaction.number_of_reactions }}</li>
+      <li>
+        {% if transaction.customer %}
+          <a href="{% url 'revenue_tracker:customer_detail' pk=transaction.customer.pk %}">{{ transaction.customer }}</a>
+        {% else %}
+          -
+        {% endif %}
+      </li>
+      <li>{{ transaction.vendor }}</li>
+      <li>{{ transaction.date }}</li>
+      <li>{{ transaction.total_price }}</li>
+      <li>{{ transaction.ip_related_price }}</li>
+      <li>{{ transaction.quote }}</li>
+      <li>{{ transaction.order }}</li>
+      <li>{{ transaction.invoice }}</li>
+      <li>{{ transaction.date_fulfilled }}</li>
+      <li>{{ transaction.date_paid }}</li>
+      <li>{{ transaction.description }}</li>
+      <li>{{ transaction.notes }}</li>
+      <li><a href="{% url 'admin:revenue_tracker_transaction_change' transaction.pk %}" target="_blank"><i class="glyphicon glyphicon-pencil"></i></a></li>
+    </ul>
+
+  </div>
+
+{% endblock %}

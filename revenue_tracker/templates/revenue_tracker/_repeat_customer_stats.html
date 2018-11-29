@@ -1,0 +1,3 @@
+{% load humanize %}
+
+<small><i class="glyphicon glyphicon-repeat" data-toggle="tooltip" data-placement="top" title="{{ customer.tx_count }} Transactions<br>{{customer.reaction_count }} Reactions<br>${{ customer.total_revenue|intcomma }}"></i></small>

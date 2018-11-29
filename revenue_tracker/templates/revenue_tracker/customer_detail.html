@@ -1,0 +1,82 @@
+{% extends "revenue_tracker/base.html" %}
+{% load humanize project_home %}
+
+{% block title %}
+  {{ customer }} | {{ block.super }}
+{% endblock %}
+
+{% block content %}
+
+  <div class="container">
+
+    <ol class="breadcrumb">
+      {% project_home_breadcrumb_bs3 %}
+      <li><a href="{% url 'revenue_tracker:transaction_list' %}">Transactions</a></li>
+      <li><a href="{% url 'revenue_tracker:customer_list' %}">Customers</a></li>
+      <li class="active">{{ customer }}</li>
+    </ol>
+
+    <a name='summary'></a>
+    <div class="jumbotron">
+      <h3>
+        <span class="label label-{{ customer.institution_type }} pull-right">
+          {{ customer.institution_type }}
+        </span>
+      </h3>
+
+      {% if customer.name %}
+        <h1 class="customer">
+          {% if customer.website %}<a href="{{ customer.website }}">{{ customer.name }}</a>{% else %}{{ customer.name }}{% endif %}
+        <br>
+        <small>
+          {% if customer.institution.website %}<a href="{{ customer.institution.website }}">{{ customer.institution }}</a>{% else %}{{ customer.institution }}{% endif %}
+        </small>
+        </h1>
+      {% else %}
+        <h1>
+          {% if customer.institution.website %}<a href="{{ customer.institution.website }}">{{ customer.institution }}</a>{% else %}{{ customer.institution }}{% endif %}
+        </h1>
+      {% endif %}
+
+      {% if customer.contact %}
+        <div>
+          <i class="glyphicon glyphicon-user"></i>:
+          {{ customer.contact.name }}
+          {% if customer.contact.email %}
+            <a href="mailto:{{ customer.contact.email }}"><i class="glyphicon glyphicon glyphicon-envelope"></i></a>
+          {% endif %}
+          {% if customer.contact.website %}
+            <a href="{{ customer.contact.website }}" target="_blank"><i class="glyphicon glyphicon-share-alt"></i></a>
+          {% endif %}
+          {% if customer.contact.phone %}
+            <br>
+            <i class="glyphicon glyphicon-earphone"></i>: {{ customer.contact.phone.as_international }}
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% if customer.projects.count > 0 %}
+        <br>
+        <a class="btn btn-primary" href="{% url 'ngs_project_tracker:project_list' projectowner_pk=customer.pk %}">View '{{ customer.code }}' Projects</a>
+      {% endif %}
+    </div>
+
+    <h2>Transaction Summary</h2>
+    {% if unfulfilled_list %}
+      {% include "revenue_tracker/_transaction_summary_panel.html" with panel_type="danger" full_report=report_unfulfilled anchor="pending-transaction-summary" panel_title="Pending" %}
+      {% include "revenue_tracker/_transaction_summary_panel.html" with panel_type="info" full_report=report_including_unfulfilled anchor="completed-and-pending-transaction-summary" panel_title="Completed & Pending" %}
+    {% endif %}
+    {% include "revenue_tracker/_transaction_summary_panel.html" with panel_type="primary" full_report=report anchor="completed-transaction-summary" panel_title="Completed" %}
+
+    <h2>
+      Transactions
+      <small><a href="{% url 'admin:revenue_tracker_transaction_add' %}?customer_pk={{ customer.pk }}&amp;next={% url 'revenue_tracker:customer_detail' pk=customer.pk %}"><i class="glyphicon glyphicon-plus-sign"></i></a></small>
+    </h2>
+    {% if unfulfilled_list %}
+      {% include "revenue_tracker/_transaction_panel.html" with panel_type="danger" transaction_list=unfulfilled_list transaction_type="all" anchor="pending-transactions" panel_title="Pending" %}
+    {% endif %}
+    {% include "revenue_tracker/_transaction_panel.html" with panel_type="primary" transaction_list=fulfilled_list transaction_type="all" anchor="completed-transactions" panel_title="Completed" %}
+
+  </div>
+
+{% endblock %}

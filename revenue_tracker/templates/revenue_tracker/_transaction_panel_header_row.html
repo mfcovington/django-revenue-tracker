@@ -1,0 +1,27 @@
+<tr>
+  <th></th>
+  {% if outstanding %}
+    <th><i class="glyphicon glyphicon-hourglass"></i></th>
+  {% endif %}
+  <th>Project</th>
+  <th>Date Ordered</th>
+  <th>Date Fulfilled</th>
+  {% if not customer %}
+    <th>Customer</th>
+  {% endif %}
+  <th>Vendor</th>
+  {% if transaction_type == 'all' %}
+    <th>Transaction Type</th>
+  {% endif %}
+  <th>Size</th>
+  <th>Quote</th>
+  <th>Order</th>
+  <th>Invoice</th>
+  <th>Total Revenue</th>
+  <th>Revenue / Sample</th>
+  <th>IP-Related (Net)</th>
+  <th>IP-Related (Gross)</th>
+  <th>IP-Related Discount</th>
+  <th>Royalties Owed</th>
+  <th></th>
+</tr>
