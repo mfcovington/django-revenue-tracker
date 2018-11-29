@@ -2,5 +2,5 @@ include CHANGELOG.rst
 include LICENSE
 include README.rst
 recursive-include revenue_tracker/static *
-recursive-include revenue_tracker/template_tags *
 recursive-include revenue_tracker/templates *
+recursive-include revenue_tracker/templatetags *
