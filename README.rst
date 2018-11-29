@@ -19,11 +19,11 @@ Installation
 ..     pip install django-revenue-tracker
 
 
-.. **GitHub (development branch)**
+**GitHub (development branch)**
 
-.. .. code-block:: sh
+.. code-block:: sh
 
-..     pip install git+http://github.com/mfcovington/django-revenue-tracker.git@develop
+    pip install git+http://github.com/mfcovington/django-revenue-tracker.git@develop
 
 
 Configuration
