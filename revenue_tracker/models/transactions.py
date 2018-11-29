@@ -1,6 +1,7 @@
 import os
 import datetime
 
+from django.conf import settings
 from django.db import models
 from django.db.models import Count, F, ExpressionWrapper, Sum
 
@@ -10,7 +11,7 @@ from ngs_project_tracker.models import Project
 from ..models import Customer
 
 
-ROYALTY_PERCENTAGE = 0.025 # import from settings (for first 1 million. After that, 2.75%)
+ROYALTY_PERCENTAGE = getattr(settings, 'ROYALTY_PERCENTAGE', 0)
 
 
 TRANSACTION_TYPE_CHOICES = [
