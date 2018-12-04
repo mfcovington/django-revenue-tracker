@@ -56,6 +56,7 @@ Specify the following in ``settings.py``:
     PHONENUMBER_DEFAULT_REGION = 'US'
     CRISPY_TEMPLATE_PACK = 'bootstrap4'
     DROPBOX_ACCESS_TOKEN = ''    # https://www.dropbox.com/developers/apps
+    DROPBOX_APP_KEY = ''    # https://www.dropbox.com/developers/apps
     BRANDING_NAME = ''    # e.g., BRANDING_NAME = 'Amaryllis Nucleics'
     MEDIA_URL = '/files/'    # Replace '/files/' with preferred URL
     MEDIA_ROOT = os.path.join(BASE_DIR, 'files')    # Replace 'files' with preferred path
