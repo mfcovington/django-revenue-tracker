@@ -87,7 +87,7 @@ Add the ``revenue_tracker``, ``ngs_project_tracker``, and ``dropbox_file_tracker
 Migrations
 ==========
 
-Create and perform ``revenue_tracker`` migrations:
+Create migrations for ``revenue_tracker`` and dependencies, if necessary:
 
 .. code-block:: sh
 
@@ -95,6 +95,12 @@ Create and perform ``revenue_tracker`` migrations:
     python manage.py makemigrations dropbox_file_tracker
     python manage.py makemigrations ngs_project_tracker
     python manage.py makemigrations revenue_tracker
+
+
+Perform migrations for ``revenue_tracker`` and dependencies:
+
+.. code-block:: sh
+
     python manage.py migrate
 
 
