@@ -74,6 +74,8 @@ Add the ``revenue_tracker``, ``ngs_project_tracker``, and ``dropbox_file_tracker
 
 .. code-block:: python
 
+    from django.conf import settings
+    from django.conf.urls.static import static
     from django.urls import include, path
 
     urlpatterns = [
@@ -81,7 +83,14 @@ Add the ``revenue_tracker``, ``ngs_project_tracker``, and ``dropbox_file_tracker
         path('dropbox/', include('dropbox_file_tracker.urls', namespace='dropbox-file-tracker')),
         path('projects/', include('ngs_project_tracker.urls', namespace='ngs-project-tracker')),
         path('transactions/', include('revenue_tracker.urls', namespace='revenue_tracker')),
-    ]
+    ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+Create the Dropbox thumbnails directory
+
+.. code-block:: sh
+
+    python manage.py mkdir_thumbnails
 
 
 Migrations
