@@ -17,15 +17,15 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 install_requires = [
     "Django>=2,<3",    # Confirmed good from 2.1.2 through 2.1.3
-    "django-customer-tracker>=0.1.0",    # Confirmed good through 0.1.0
+    "django-customer-tracker>=0.1.0",    # Confirmed good through 0.1.1
     "django-money>=0.12",    # Confirmed good from 0.12.1 through 0.14.3
-    "django-ngs-project-tracker>=0.1.0",    # Confirmed good through 0.1.0
+    "django-ngs-project-tracker>=0.1.0",    # Confirmed good through 0.1.1
     "django-project-home-templatetags>=0.1.0",    # Confirmed good through 0.1.0
 ]
 
 setup(
     name='django-revenue-tracker',
-    version='0.1.0',
+    version='0.2.0',
     packages=['revenue_tracker'],
     include_package_data=True,
     license='BSD License',

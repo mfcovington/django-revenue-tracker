@@ -1,6 +1,7 @@
 include CHANGELOG.rst
 include LICENSE
 include README.rst
+recursive-include revenue_tracker/migrations *.py
 recursive-include revenue_tracker/static *
 recursive-include revenue_tracker/templates *
-recursive-include revenue_tracker/templatetags *
+recursive-include revenue_tracker/templatetags *.py

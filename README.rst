@@ -56,6 +56,7 @@ Specify the following in ``settings.py``:
     PHONENUMBER_DEFAULT_REGION = 'US'
     CRISPY_TEMPLATE_PACK = 'bootstrap4'
     DROPBOX_ACCESS_TOKEN = ''    # https://www.dropbox.com/developers/apps
+    DROPBOX_APP_KEY = ''    # https://www.dropbox.com/developers/apps
     BRANDING_NAME = ''    # e.g., BRANDING_NAME = 'Amaryllis Nucleics'
     MEDIA_URL = '/files/'    # Replace '/files/' with preferred URL
     MEDIA_ROOT = os.path.join(BASE_DIR, 'files')    # Replace 'files' with preferred path
@@ -73,6 +74,8 @@ Add the ``revenue_tracker``, ``ngs_project_tracker``, and ``dropbox_file_tracker
 
 .. code-block:: python
 
+    from django.conf import settings
+    from django.conf.urls.static import static
     from django.urls import include, path
 
     urlpatterns = [
@@ -80,13 +83,20 @@ Add the ``revenue_tracker``, ``ngs_project_tracker``, and ``dropbox_file_tracker
         path('dropbox/', include('dropbox_file_tracker.urls', namespace='dropbox-file-tracker')),
         path('projects/', include('ngs_project_tracker.urls', namespace='ngs-project-tracker')),
         path('transactions/', include('revenue_tracker.urls', namespace='revenue_tracker')),
-    ]
+    ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+Create the Dropbox thumbnails directory
+
+.. code-block:: sh
+
+    python manage.py mkdir_thumbnails
 
 
 Migrations
 ==========
 
-Create and perform ``revenue_tracker`` migrations:
+Create migrations for ``revenue_tracker`` and dependencies, if necessary:
 
 .. code-block:: sh
 
@@ -94,6 +104,12 @@ Create and perform ``revenue_tracker`` migrations:
     python manage.py makemigrations dropbox_file_tracker
     python manage.py makemigrations ngs_project_tracker
     python manage.py makemigrations revenue_tracker
+
+
+Perform migrations for ``revenue_tracker`` and dependencies:
+
+.. code-block:: sh
+
     python manage.py migrate
 
 
@@ -109,4 +125,4 @@ Usage
 - Visit to set base prices for various transaction types: ``http://127.0.0.1:8000/admin/revenue_tracker/baseprice/``
 
 
-*Version 0.1.0*
+*Version 0.2.0*
