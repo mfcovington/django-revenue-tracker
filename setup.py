@@ -25,7 +25,7 @@ install_requires = [
 
 setup(
     name='django-revenue-tracker',
-    version='0.2.0',
+    version='0.2.1',
     packages=['revenue_tracker'],
     include_package_data=True,
     license='BSD License',
