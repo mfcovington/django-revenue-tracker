@@ -125,4 +125,4 @@ Usage
 - Visit to set base prices for various transaction types: ``http://127.0.0.1:8000/admin/revenue_tracker/baseprice/``
 
 
-*Version 0.2.0*
+*Version 0.2.1*

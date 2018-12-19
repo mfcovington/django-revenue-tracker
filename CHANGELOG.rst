@@ -1,6 +1,11 @@
 Revision History
 ================
 
+0.2.1 2018-12-18
+
+- Fix customer admin query set
+
+
 0.2.0 2018-12-07
 
 - Update to `django-dropbox-file-tracker` v0.2.1 which requires `settings.DROPBOX_APP_KEY`
