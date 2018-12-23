@@ -46,7 +46,9 @@
       <li>{{ transaction.date_paid }}</li>
       <li>{{ transaction.description }}</li>
       <li>{{ transaction.notes }}</li>
-      <li><a href="{% url 'admin:revenue_tracker_transaction_change' transaction.pk %}" target="_blank"><i class="glyphicon glyphicon-pencil"></i></a></li>
+      {% if perms.revenue_tracker.change_transaction %}
+        <li><a href="{% url 'admin:revenue_tracker_transaction_change' transaction.pk %}" target="_blank"><i class="glyphicon glyphicon-pencil"></i></a></li>
+      {% endif %}
     </ul>
 
   </div>

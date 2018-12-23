@@ -1,6 +1,6 @@
 import datetime
 
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db.models import Count, Min, Max
 from django.shortcuts import render
 from django.views.generic import DetailView, ListView
@@ -8,9 +8,12 @@ from django.views.generic import DetailView, ListView
 from .models import Customer, Transaction
 
 
-class CustomerDetail(LoginRequiredMixin, DetailView):
+class CustomerDetail(PermissionRequiredMixin, DetailView):
     context_object_name = 'customer'
     model = Customer
+    permission_denied_message = ('You do not have permission to view customer '
+        'lists.')
+    permission_required = 'revenue_tracker.view_transaction'
 
     def _transaction_date_range(self):
         dates_fulfilled = Transaction.objects.values('date_fulfilled').aggregate(
@@ -59,14 +62,19 @@ class CustomerDetail(LoginRequiredMixin, DetailView):
         return context
 
 
-class CustomerList(LoginRequiredMixin, ListView):
+class CustomerList(PermissionRequiredMixin, ListView):
     context_object_name = 'customer_list'
     model = Customer
+    permission_denied_message = 'You do not have permission to view customers.'
+    permission_required = 'revenue_tracker.view_transaction'
 
 
-class OutstandingInvoicesList(LoginRequiredMixin, ListView):
+class OutstandingInvoicesList(PermissionRequiredMixin, ListView):
     context_object_name = 'transaction_list'
     model = Transaction
+    permission_denied_message = ('You do not have permission to view '
+        'transactions with outstanding invoices.')
+    permission_required = 'revenue_tracker.view_transaction'
     template_name = 'revenue_tracker/outstanding_invoices_list.html'
 
     def get_context_data(self, **kwargs):
@@ -82,10 +90,12 @@ class OutstandingInvoicesList(LoginRequiredMixin, ListView):
             ).order_by('date_fulfilled')
 
 
-class PendingTransactionsList(LoginRequiredMixin, ListView):
+class PendingTransactionsList(PermissionRequiredMixin, ListView):
     context_object_name = 'transaction_list'
     model = Transaction
-    template_name = 'revenue_tracker/pending_transactions_list.html'
+    permission_denied_message = ('You do not have permission to view pending '
+        'transactions.')
+    permission_required = 'revenue_tracker.view_transaction'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -116,14 +126,20 @@ class PendingTransactionsList(LoginRequiredMixin, ListView):
         )
 
 
-class TransactionDetail(LoginRequiredMixin, DetailView):
+class TransactionDetail(PermissionRequiredMixin, DetailView):
     context_object_name = 'transaction'
     model = Transaction
+    permission_denied_message = ('You do not have permission to transaction '
+        'details.')
+    permission_required = 'revenue_tracker.view_transaction'
 
 
-class TransactionList(LoginRequiredMixin, ListView):
+class TransactionList(PermissionRequiredMixin, ListView):
     context_object_name = 'transaction_list'
     model = Transaction
+    permission_denied_message = ('You do not have permission to view '
+        'transactions.')
+    permission_required = 'revenue_tracker.view_transaction'
 
     _quarters = {
         'Q1': ['01-01', '03-31'],

@@ -31,9 +31,9 @@
     </td>
   {% endif %}
   <td>
-    {% if transaction.project %}
+    {% if transaction.project and perms.ngs_project_tracker.view_project %}
       <a class="btn btn-xs btn-info" href="{% url 'ngs_project_tracker:project_detail' transaction.project.pk %}">{{ transaction.project.code }}</a>
-    {% elif transaction.transaction_type == 'service' %}
+    {% elif transaction.transaction_type == 'service' and perms.ngs_project_tracker.add_project %}
       <a class="btn btn-xs btn-success" href="{% url 'ngs_project_tracker:project_create' %}?owner={{ transaction.customer.pk }}&amp;transaction={{ transaction.pk }}&amp;sample_number={{ transaction.number_of_reactions }}&amp;start_date={{ transaction.date_samples_arrived|date:'Y-m-d' }}"><i class="glyphicon glyphicon-plus"></i></a>
     {% else %}
       -
@@ -105,6 +105,8 @@
   <td>{{ transaction.royalties_owed }}</td>
   <td>
     <a href="{% url 'revenue_tracker:transaction_detail' pk=transaction.pk %}"><i class="glyphicon glyphicon-info-sign"></i></a>
-    <a href="{% url 'admin:revenue_tracker_transaction_change' transaction.pk %}?next={% if customer %}{% url 'revenue_tracker:customer_detail' pk=customer.pk %}{% else %}{% url 'revenue_tracker:transaction_list' %}{% endif %}"><i class="glyphicon glyphicon-pencil"></i></a>
+    {% if perms.revenue_tracker.change_transaction %}
+      <a href="{% url 'admin:revenue_tracker_transaction_change' transaction.pk %}?next={% if customer %}{% url 'revenue_tracker:customer_detail' pk=customer.pk %}{% else %}{% url 'revenue_tracker:transaction_list' %}{% endif %}"><i class="glyphicon glyphicon-pencil"></i></a>
+    {% endif %}
   </td>
 </tr>
