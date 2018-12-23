@@ -13,7 +13,7 @@
       {% project_home_breadcrumb_bs3 %}
       <li><a href="{% url 'revenue_tracker:transaction_list' %}">Transactions</a></li>
       <li><a href="{% url 'revenue_tracker:customer_list' %}">Customers</a></li>
-      <li><a href="{% url 'revenue_tracker:customer_list' %}">{{ transaction.customer }}</a></li>
+      <li><a href="{% url 'revenue_tracker:customer_detail' pk=transaction.customer.pk %}">{{ transaction.customer }}</a></li>
       <li class="active">{{ transaction.date }}</li>
     </ol>
 
