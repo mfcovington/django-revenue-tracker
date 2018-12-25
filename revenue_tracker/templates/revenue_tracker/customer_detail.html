@@ -64,9 +64,13 @@
     <h2>Transaction Summary</h2>
     {% if unfulfilled_list %}
       {% include "revenue_tracker/_transaction_summary_panel.html" with panel_type="danger" full_report=report_unfulfilled anchor="pending-transaction-summary" panel_title="Pending" %}
+    {% endif %}
+    {% if unfulfilled_list and fulfilled_list %}
       {% include "revenue_tracker/_transaction_summary_panel.html" with panel_type="info" full_report=report_including_unfulfilled anchor="completed-and-pending-transaction-summary" panel_title="Completed & Pending" %}
     {% endif %}
-    {% include "revenue_tracker/_transaction_summary_panel.html" with panel_type="primary" full_report=report anchor="completed-transaction-summary" panel_title="Completed" %}
+    {% if fulfilled_list %}
+      {% include "revenue_tracker/_transaction_summary_panel.html" with panel_type="primary" full_report=report anchor="completed-transaction-summary" panel_title="Completed" %}
+    {% endif %}
 
     <h2>
       Transactions
@@ -77,7 +81,9 @@
     {% if unfulfilled_list %}
       {% include "revenue_tracker/_transaction_panel.html" with panel_type="danger" transaction_list=unfulfilled_list transaction_type="all" anchor="pending-transactions" panel_title="Pending" %}
     {% endif %}
-    {% include "revenue_tracker/_transaction_panel.html" with panel_type="primary" transaction_list=fulfilled_list transaction_type="all" anchor="completed-transactions" panel_title="Completed" %}
+    {% if fulfilled_list %}
+      {% include "revenue_tracker/_transaction_panel.html" with panel_type="primary" transaction_list=fulfilled_list transaction_type="all" anchor="completed-transactions" panel_title="Completed" %}
+    {% endif %}
 
   </div>
 
