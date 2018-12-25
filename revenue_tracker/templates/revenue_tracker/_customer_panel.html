@@ -30,8 +30,14 @@
             {% endif %}
           </td>
           <td>
-            {{ customer.contact }}
-            <a href="mailto:{{ customer.contact.email }}"><small><i class="glyphicon glyphicon-envelope"></i></small></a>
+            {% if customer.contact %}
+              {{ customer.contact }}
+              {% if customer.contact.email %}
+                <a href="mailto:{{ customer.contact.email }}"><small><i class="glyphicon glyphicon-envelope"></i></small></a>
+              {% endif %}
+            {% else %}
+              -
+            {% endif %}
           </td>
           <td>{{ customer.institution_type }}</td>
           <td>{{ customer.transactions.count }}</td>
