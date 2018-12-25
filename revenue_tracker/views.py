@@ -96,6 +96,7 @@ class PendingTransactionsList(PermissionRequiredMixin, ListView):
     permission_denied_message = ('You do not have permission to view pending '
         'transactions.')
     permission_required = 'revenue_tracker.view_transaction'
+    template_name = 'revenue_tracker/pending_transactions_list.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

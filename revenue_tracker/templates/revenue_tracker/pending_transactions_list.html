@@ -15,13 +15,17 @@
       <li class="active">Pending Transactions</li>
     </ol>
 
-    <div class="well">
-      <form method="get" class="form-inline">
-        {% include "revenue_tracker/_type_filters.html" %}
-        &nbsp;&nbsp;
-        <br>
-        {% include "revenue_tracker/_submit_filters.html" %}
-      </form>
+    <a name='summary'></a>
+    <div class="jumbotron">
+      <h1>Pending Transaction Report</h1>
+      <div class="well">
+        <form method="get" class="form-inline">
+          {% include "revenue_tracker/_type_filters.html" %}
+          &nbsp;&nbsp;
+          <br>
+          {% include "revenue_tracker/_submit_filters.html" %}
+        </form>
+      </div>
     </div>
 
     <h2>Transaction Summary</h2>
