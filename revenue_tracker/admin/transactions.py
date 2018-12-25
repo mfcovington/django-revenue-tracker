@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect
 from ngs_project_tracker.models import Project
 
 from ..models import BasePrice, Invoice, Order, Quote, Transaction
-from ..models import Customer
+from ..models import Customer, Vendor
 
 
 class SamplesArrivedForServiceStatusFilter(admin.SimpleListFilter):
@@ -152,6 +152,12 @@ class TransactionAdmin(admin.ModelAdmin):
         try:
             initial['customer'] = Customer.objects.get(
                 pk=request.GET.get('customer_pk'))
+        except:
+            pass
+
+        try:
+            initial['vendor'] = Vendor.objects.get(
+                pk=request.GET.get('vendor_pk'))
         except:
             pass
 

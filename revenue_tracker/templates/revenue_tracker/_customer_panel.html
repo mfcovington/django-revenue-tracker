@@ -11,7 +11,9 @@
         <th></th>
         <th>Customer</th>
         <th>Contact</th>
-        <th>Type</th>
+        {% if not is_vendor %}
+          <th>Type</th>
+        {% endif %}
         <th>Transaction Count</th>
       </tr>
     </thead>
@@ -24,7 +26,11 @@
             {% endif %}
           </td>
           <td>
-            <a href="{% url 'revenue_tracker:customer_detail' pk=customer.pk %}">{{ customer }}</a>
+            {% if not is_vendor %}
+              <a href="{% url 'revenue_tracker:customer_detail' pk=customer.pk %}">{{ customer }}</a>
+            {% else %}
+              <a href="{% url 'revenue_tracker:vendor_detail' pk=customer.pk %}">{{ customer }}</a>
+            {% endif %}
             {% if customer.website %}
               <a href="{{ customer.website }}"><i class="glyphicon glyphicon-share-alt"></i></a>
             {% endif %}
@@ -39,7 +45,9 @@
               -
             {% endif %}
           </td>
-          <td>{{ customer.institution_type }}</td>
+          {% if not is_vendor %}
+            <td>{{ customer.institution_type }}</td>
+          {% endif %}
           <td>{{ customer.transactions.count }}</td>
         </tr>
       {% endfor %}

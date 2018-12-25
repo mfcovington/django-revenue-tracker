@@ -41,7 +41,7 @@
   </td>
   <td>{{ transaction.date }}</td>
   <td>{{ transaction.date_fulfilled|default:"-" }}</td>
-  {% if not customer %}
+  {% if not customer or is_vendor %}
     <td>
       {% if transaction.customer %}
         <a href="{% url 'revenue_tracker:customer_detail' pk=transaction.customer.pk %}">{{ transaction.customer }}</a>
@@ -53,13 +53,18 @@
       {% endif %}
     </td>
   {% endif %}
-  <td>
-    {% if transaction.vendor.website %}
-      <a href="{{ transaction.vendor.website }}" target="_blank">{{ transaction.vendor }}</a>
-    {% else %}
-      {{ transaction.vendor|default:"-" }}
-    {% endif %}
-  </td>
+  {% if not is_vendor %}
+    <td>
+      {% if transaction.vendor %}
+        <a href="{% url 'revenue_tracker:vendor_detail' pk=transaction.vendor.pk %}">{{ transaction.vendor }}</a>
+      {% else %}
+        -
+      {% endif %}
+      {% if transaction.vendor.website %}
+        <a href="{{ transaction.vendor.website }}"><i class="glyphicon glyphicon-share-alt"></i></a>
+      {% endif %}
+    </td>
+  {% endif %}
   {% if transaction_type == 'all' %}
     <td>{{ transaction.get_transaction_type_display }}</td>
   {% endif %}
@@ -106,7 +111,7 @@
   <td>
     <a href="{% url 'revenue_tracker:transaction_detail' pk=transaction.pk %}"><i class="glyphicon glyphicon-info-sign"></i></a>
     {% if perms.revenue_tracker.change_transaction %}
-      <a href="{% url 'admin:revenue_tracker_transaction_change' transaction.pk %}?next={% if customer %}{% url 'revenue_tracker:customer_detail' pk=customer.pk %}{% else %}{% url 'revenue_tracker:transaction_list' %}{% endif %}"><i class="glyphicon glyphicon-pencil"></i></a>
+      <a href="{% url 'admin:revenue_tracker_transaction_change' transaction.pk %}?next={% if is_vendor %}{% url 'revenue_tracker:vendor_detail' pk=customer.pk %}{% elif customer %}{% url 'revenue_tracker:customer_detail' pk=customer.pk %}{% else %}{% url 'revenue_tracker:transaction_list' %}{% endif %}"><i class="glyphicon glyphicon-pencil"></i></a>
     {% endif %}
   </td>
 </tr>

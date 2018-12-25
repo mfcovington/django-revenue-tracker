@@ -61,3 +61,24 @@ class Vendor(models.Model):
     @property
     def contact_name(self):
         return self.contact.name
+
+    @property
+    def is_repeat_customer(self):
+        if self.tx_count > 1:
+            return True
+        else:
+            return False
+
+    @property
+    def reaction_count(self):
+        return sum(
+            sum(self.transactions.values_list('number_of_reactions'), ()))
+
+    @property
+    def total_revenue(self):
+        return sum(
+            sum(self.transactions.values_list('total_price'), ()))
+
+    @property
+    def tx_count(self):
+        return len(set(self.transactions.values_list('date')))

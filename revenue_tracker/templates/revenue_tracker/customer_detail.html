@@ -12,7 +12,13 @@
     <ol class="breadcrumb">
       {% project_home_breadcrumb_bs3 %}
       <li><a href="{% url 'revenue_tracker:transaction_list' %}">Transactions</a></li>
-      <li><a href="{% url 'revenue_tracker:customer_list' %}">Customers</a></li>
+      <li>
+        {% if is_vendor %}
+          <a href="{% url 'revenue_tracker:vendor_list' %}">Vendors</a>
+        {% else %}
+          <a href="{% url 'revenue_tracker:customer_list' %}">Customers</a>
+        {% endif %}
+      </li>
       <li class="active">{{ customer }}</li>
     </ol>
 
@@ -61,21 +67,29 @@
       {% endif %}
     </div>
 
-    <h2>Transaction Summary</h2>
-    {% if unfulfilled_list %}
-      {% include "revenue_tracker/_transaction_summary_panel.html" with panel_type="danger" full_report=report_unfulfilled anchor="pending-transaction-summary" panel_title="Pending" %}
-    {% endif %}
-    {% if unfulfilled_list and fulfilled_list %}
-      {% include "revenue_tracker/_transaction_summary_panel.html" with panel_type="info" full_report=report_including_unfulfilled anchor="completed-and-pending-transaction-summary" panel_title="Completed & Pending" %}
-    {% endif %}
-    {% if fulfilled_list %}
-      {% include "revenue_tracker/_transaction_summary_panel.html" with panel_type="primary" full_report=report anchor="completed-transaction-summary" panel_title="Completed" %}
+    {% if not is_vendor %}
+      <h2>Transaction Summary</h2>
+      {% if unfulfilled_list %}
+        {% include "revenue_tracker/_transaction_summary_panel.html" with panel_type="danger" full_report=report_unfulfilled anchor="pending-transaction-summary" panel_title="Pending" %}
+      {% endif %}
+      {% if unfulfilled_list and fulfilled_list %}
+        {% include "revenue_tracker/_transaction_summary_panel.html" with panel_type="info" full_report=report_including_unfulfilled anchor="completed-and-pending-transaction-summary" panel_title="Completed & Pending" %}
+      {% endif %}
+      {% if fulfilled_list %}
+        {% include "revenue_tracker/_transaction_summary_panel.html" with panel_type="primary" full_report=report anchor="completed-transaction-summary" panel_title="Completed" %}
+      {% endif %}
     {% endif %}
 
     <h2>
       Transactions
       {% if perms.revenue_tracker.add_transaction %}
-        <small><a href="{% url 'admin:revenue_tracker_transaction_add' %}?customer_pk={{ customer.pk }}&amp;next={% url 'revenue_tracker:customer_detail' pk=customer.pk %}"><i class="glyphicon glyphicon-plus-sign"></i></a></small>
+        <small>
+          {% if is_vendor %}
+            <a href="{% url 'admin:revenue_tracker_transaction_add' %}?vendor_pk={{ customer.pk }}&amp;next={% url 'revenue_tracker:vendor_detail' pk=customer.pk %}"><i class="glyphicon glyphicon-plus-sign"></i></a>
+          {% else %}
+            <a href="{% url 'admin:revenue_tracker_transaction_add' %}?customer_pk={{ customer.pk }}&amp;next={% url 'revenue_tracker:customer_detail' pk=customer.pk %}"><i class="glyphicon glyphicon-plus-sign"></i></a>
+          {% endif %}
+        </small>
       {% endif %}
     </h2>
     {% if unfulfilled_list %}

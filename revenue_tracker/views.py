@@ -5,15 +5,13 @@ from django.db.models import Count, Min, Max
 from django.shortcuts import render
 from django.views.generic import DetailView, ListView
 
-from .models import Customer, Transaction
+from .models import Customer, Transaction, Vendor
 
 
-class CustomerDetail(PermissionRequiredMixin, DetailView):
+class CustomerVendorDetailBase(PermissionRequiredMixin, DetailView):
     context_object_name = 'customer'
-    model = Customer
-    permission_denied_message = ('You do not have permission to view customer '
-        'lists.')
     permission_required = 'revenue_tracker.view_transaction'
+    template_name = 'revenue_tracker/customer_detail.html'
 
     def _transaction_date_range(self):
         dates_fulfilled = Transaction.objects.values('date_fulfilled').aggregate(
@@ -33,16 +31,29 @@ class CustomerDetail(PermissionRequiredMixin, DetailView):
         return [from_date, to_date]
 
     def get_context_data(self, **kwargs):
-        context = super(CustomerDetail, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         transaction_date_range = self._transaction_date_range()
         from_date=transaction_date_range[0]
         to_date=transaction_date_range[1]
+        context['from_date'] = str(from_date)
+        context['to_date'] = str(to_date)
+        context['tx_count'] = len(set(self.object.transactions.values_list('date')))
+        return context
+
+
+class CustomerDetail(CustomerVendorDetailBase):
+    model = Customer
+    permission_denied_message = ('You do not have permission to view customer '
+        'lists.')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        from_date=context['from_date']
+        to_date=context['to_date']
         context['report'] = Transaction.objects.get_royalties_report(
             from_date=from_date,
             to_date=to_date,
             customer_id=self.object.pk)
-        context['from_date'] = str(from_date)
-        context['to_date'] = str(to_date)
         context['fulfilled_list'] = Transaction.objects.filter(
             date_fulfilled__gte=from_date,
             date_fulfilled__lte=to_date,
@@ -58,7 +69,7 @@ class CustomerDetail(PermissionRequiredMixin, DetailView):
             to_date=to_date,
             include_in_progress=True,
             customer_id=self.object.pk)
-        context['tx_count'] = len(set(self.object.transactions.values_list('date')))
+        context['is_vendor'] = False
         return context
 
 
@@ -262,3 +273,31 @@ class TransactionList(PermissionRequiredMixin, ListView):
                 date_fulfilled__lte=transaction_date_range[1],
                 **type_kwargs,
             )
+
+
+class VendorDetail(CustomerVendorDetailBase):
+    model = Vendor
+    permission_denied_message = ('You do not have permission to view vendor '
+        'lists.')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        from_date=context['from_date']
+        to_date=context['to_date']
+        context['fulfilled_list'] = Transaction.objects.filter(
+            date_fulfilled__gte=from_date,
+            date_fulfilled__lte=to_date,
+            vendor__pk=self.object.pk)
+        context['unfulfilled_list'] = Transaction.objects.filter(
+            date_fulfilled=None,
+            vendor__pk=self.object.pk)
+        context['is_vendor'] = True
+        return context
+
+
+class VendorList(PermissionRequiredMixin, ListView):
+    context_object_name = 'vendor_list'
+    model = Vendor
+    permission_denied_message = 'You do not have permission to view vendors.'
+    permission_required = 'revenue_tracker.view_transaction'
+    template_name = 'revenue_tracker/customer_list.html'

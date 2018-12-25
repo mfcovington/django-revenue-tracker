@@ -6,10 +6,12 @@
   <th>Project</th>
   <th>Date Ordered</th>
   <th>Date Fulfilled</th>
-  {% if not customer %}
+  {% if not customer or is_vendor %}
     <th>Customer</th>
   {% endif %}
-  <th>Vendor</th>
+  {% if not is_vendor %}
+    <th>Vendor</th>
+  {% endif %}
   {% if transaction_type == 'all' %}
     <th>Transaction Type</th>
   {% endif %}

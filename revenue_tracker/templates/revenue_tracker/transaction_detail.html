@@ -35,7 +35,13 @@
           -
         {% endif %}
       </li>
-      <li>{{ transaction.vendor }}</li>
+      <li>
+        {% if transaction.vendor %}
+          <a href="{% url 'revenue_tracker:vendor_detail' pk=transaction.vendor.pk %}">{{ transaction.vendor }}</a>
+        {% else %}
+          -
+        {% endif %}
+      </li>
       <li>{{ transaction.date }}</li>
       <li>{{ transaction.total_price }}</li>
       <li>{{ transaction.ip_related_price }}</li>

@@ -2,7 +2,7 @@
 {% load project_home %}
 
 {% block title %}
-  Customers | {{ block.super }}
+  {% if customer_list %}Customers{% elif vendor_list %}Vendors{% endif %} | {{ block.super }}
 {% endblock %}
 
 {% block content %}
@@ -12,10 +12,14 @@
     <ol class="breadcrumb">
       {% project_home_breadcrumb_bs3 %}
       <li><a href="{% url 'revenue_tracker:transaction_list' %}">Transactions</a></li>
-      <li class="active">Customers</li>
+      <li class="active">{% if customer_list %}Customers{% elif vendor_list %}Vendors{% endif %}</li>
     </ol>
 
-    {% include "revenue_tracker/_customer_panel.html" with panel_type="primary" customer_list=customer_list anchor="all-customers" panel_title="" %}
+    {% if customer_list %}
+      {% include "revenue_tracker/_customer_panel.html" with panel_type="primary" customer_list=customer_list anchor="all-customers" panel_title="" %}
+    {% elif vendor_list %}
+      {% include "revenue_tracker/_customer_panel.html" with panel_type="primary" customer_list=vendor_list anchor="all-vendors" panel_title="" is_vendor=True %}
+    {% endif %}
 
   </div>
 
