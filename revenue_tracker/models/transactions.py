@@ -3,7 +3,7 @@ import datetime
 
 from django.conf import settings
 from django.db import models
-from django.db.models import Count, F, ExpressionWrapper, Sum
+from django.db.models import Case, Count, F, ExpressionWrapper, Sum, When
 
 from djmoney.models.fields import MoneyField
 from ngs_project_tracker.models import Project
