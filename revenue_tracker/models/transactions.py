@@ -258,7 +258,13 @@ class RoyaltiesManager(models.Manager):
         report['sum_total_price'] = aggregate_data['total_price__sum']
         report['sum_ip_related_price'] = aggregate_data['ip_related_price__sum']
         report['sum_number_of_reactions'] = aggregate_data['number_of_reactions__sum']
-        report['average_total_price_per_reaction'] = aggregate_data['total_price__sum'] / aggregate_data['number_of_reactions__sum']
+        if aggregate_data['number_of_reactions__sum'] > 0:
+            report['average_total_price_per_reaction'] = (
+                aggregate_data['total_price__sum']
+                / aggregate_data['number_of_reactions__sum']
+            )
+        else:
+            report['average_total_price_per_reaction'] = None
         report['sum_ip_related_price'] = aggregate_data['ip_related_price__sum']
         report['sum_ip_related_gross_price'] = aggregate_data['ip_related_gross_price__sum']
         report['sum_ip_related_discount'] = aggregate_data['ip_related_discount__sum']
