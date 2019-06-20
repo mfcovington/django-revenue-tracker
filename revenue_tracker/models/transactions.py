@@ -326,14 +326,12 @@ class RoyaltiesManager(models.Manager):
                     * F('base_ip_related_price_per_reaction'))),
                 output_field=models.FloatField()),
             sum_number_of_reactions=Sum('number_of_reactions'),
+            average_total_price_per_reaction=Case(When(sum_number_of_reactions=0, then=None),
+                default=1.0 * Sum('total_price') / Sum('number_of_reactions')
+            ),
             sum_royalties_owed=ExpressionWrapper(
                 Sum('ip_related_price') * ROYALTY_PERCENTAGE,output_field=MoneyField(
                     decimal_places=2, default_currency='USD', max_digits=8)),
-        ).aggregate(
-            average_total_price_per_reaction=Case(
-                When(sum_number_of_reactions=0, then=None),
-                default=1.0 * F(sum_total_price) / F(sum_number_of_reactions)
-            )
         ).order_by('transaction_type')
         by_type = sorted(
             by_type, key=lambda x: int(-1 * x['sum_total_price']))
