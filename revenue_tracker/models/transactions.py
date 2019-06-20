@@ -3,7 +3,7 @@ import datetime
 
 from django.conf import settings
 from django.db import models
-from django.db.models import Count, F, ExpressionWrapper, Sum
+from django.db.models import Case, Count, F, ExpressionWrapper, Sum, When
 
 from djmoney.models.fields import MoneyField
 from ngs_project_tracker.models import Project
@@ -315,21 +315,23 @@ class RoyaltiesManager(models.Manager):
                     - F('ip_related_price')),
                 output_field=MoneyField(
                     decimal_places=2, default_currency='USD', max_digits=8)),
-            sum_ip_related_discount_pct = ExpressionWrapper(
-                float(1)
-                * (Sum(
-                    F('number_of_reactions')
-                    * F('base_ip_related_price_per_reaction')
-                    - F('ip_related_price')))
-                / (Sum(
-                    F('number_of_reactions')
-                    * F('base_ip_related_price_per_reaction'))),
-                output_field=models.FloatField()),
             sum_number_of_reactions=Sum('number_of_reactions'),
-            average_total_price_per_reaction=ExpressionWrapper(
-                1.0 * Sum('total_price') / Sum('number_of_reactions'),
-                output_field=MoneyField(
-                    decimal_places=2, default_currency='USD', max_digits=8)),
+            sum_ip_related_discount_pct = Case(When(sum_number_of_reactions=0, then=None),
+                default=ExpressionWrapper(
+                    float(1)
+                    * (Sum(
+                        F('number_of_reactions')
+                        * F('base_ip_related_price_per_reaction')
+                        - F('ip_related_price')))
+                    / (Sum(
+                        F('number_of_reactions')
+                        * F('base_ip_related_price_per_reaction'))),
+                    output_field=models.FloatField())),
+            average_total_price_per_reaction=Case(When(sum_number_of_reactions=0, then=None),
+                default=ExpressionWrapper(
+                    1.0 * Sum('total_price') / Sum('number_of_reactions'),
+                    output_field=MoneyField(
+                        decimal_places=2, default_currency='USD', max_digits=8))),
             sum_royalties_owed=ExpressionWrapper(
                 Sum('ip_related_price') * ROYALTY_PERCENTAGE,output_field=MoneyField(
                     decimal_places=2, default_currency='USD', max_digits=8)),
