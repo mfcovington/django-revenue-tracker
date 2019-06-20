@@ -332,10 +332,7 @@ class RoyaltiesManager(models.Manager):
         ).aggregate(
             average_total_price_per_reaction=Case(
                 When(sum_number_of_reactions=0, then=None),
-                default=ExpressionWrapper(
-                    1.0 * Sum('total_price') / Sum('number_of_reactions'),
-                    output_field=MoneyField(
-                        decimal_places=2, default_currency='USD', max_digits=8)),
+                default=1.0 * sum_total_price / sum_number_of_reactions
             )
         ).order_by('transaction_type')
         by_type = sorted(
