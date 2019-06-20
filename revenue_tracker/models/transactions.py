@@ -327,7 +327,7 @@ class RoyaltiesManager(models.Manager):
                 output_field=models.FloatField()),
             sum_number_of_reactions=Sum('number_of_reactions'),
             average_total_price_per_reaction=Case(When(sum_number_of_reactions=0, then=1),
-                default=ExpressionWrapper(1.0 * Sum('total_price') / Sum('number_of_reactions'),
+                default=ExpressionWrapper(1.0 * Sum('total_price'),
                     output_field=MoneyField(
                         decimal_places=2, default_currency='USD', max_digits=8))
             ),
