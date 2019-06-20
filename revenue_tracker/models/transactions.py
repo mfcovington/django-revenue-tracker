@@ -315,16 +315,17 @@ class RoyaltiesManager(models.Manager):
                     - F('ip_related_price')),
                 output_field=MoneyField(
                     decimal_places=2, default_currency='USD', max_digits=8)),
-            sum_ip_related_discount_pct = ExpressionWrapper(
-                float(1)
-                * (Sum(
-                    F('number_of_reactions')
-                    * F('base_ip_related_price_per_reaction')
-                    - F('ip_related_price')))
-                / (Sum(
-                    F('number_of_reactions')
-                    * F('base_ip_related_price_per_reaction'))),
-                output_field=models.FloatField()),
+            sum_ip_related_discount_pct = Case(When(number_of_reactions=0, then=1),
+                default=ExpressionWrapper(
+                    float(1)
+                    * (Sum(
+                        F('number_of_reactions')
+                        * F('base_ip_related_price_per_reaction')
+                        - F('ip_related_price')))
+                    / (Sum(
+                        F('number_of_reactions')
+                        * F('base_ip_related_price_per_reaction'))),
+                    output_field=models.FloatField())),
             sum_number_of_reactions=Sum('number_of_reactions'),
             average_total_price_per_reaction=Case(When(sum_number_of_reactions=0, then=1),
                 default=ExpressionWrapper(1.0 * Sum('total_price'),
