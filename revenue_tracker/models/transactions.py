@@ -373,11 +373,9 @@ class Transaction(models.Model):
     class Meta:
         ordering = ['-date', 'customer']
 
-    project = models.ForeignKey(
+    projects = models.ManyToManyField(
         Project,
         blank=True,
-        null=True,
-        on_delete=models.SET_NULL,
         related_name='transactions',
     )
 

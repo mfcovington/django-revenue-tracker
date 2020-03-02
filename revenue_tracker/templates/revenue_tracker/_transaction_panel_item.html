@@ -31,8 +31,12 @@
     </td>
   {% endif %}
   <td>
-    {% if transaction.project and perms.ngs_project_tracker.view_project %}
-      <a class="btn btn-xs btn-info" href="{% url 'ngs_project_tracker:project_detail' transaction.project.pk %}">{{ transaction.project.code }}</a>
+    {% if transaction.projects.count and perms.ngs_project_tracker.view_project %}
+      <div class="btn-group-vertical" role="group" aria-label="transaction-projects">
+        {% for project in transaction.projects.all %}
+          <a class="btn btn-xs btn-info" href="{% url 'ngs_project_tracker:project_detail' project.pk %}">{{ project.code }}</a>
+        {% endfor %}
+      </div>
     {% elif transaction.transaction_type == 'service' and perms.ngs_project_tracker.add_project %}
       <a class="btn btn-xs btn-success" href="{% url 'ngs_project_tracker:project_create' %}?owner={{ transaction.customer.pk }}&amp;transaction={{ transaction.pk }}&amp;sample_number={{ transaction.number_of_reactions }}&amp;start_date={{ transaction.date_samples_arrived|date:'Y-m-d' }}"><i class="glyphicon glyphicon-plus"></i></a>
     {% else %}

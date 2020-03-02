@@ -111,7 +111,6 @@ class TransactionAdmin(admin.ModelAdmin):
         'vendor',
         'transaction_type',
         'number_of_reactions',
-        'project',
         'date_samples_arrived',
         'date_fulfilled',
         'date_paid',
@@ -144,7 +143,7 @@ class TransactionAdmin(admin.ModelAdmin):
         initial = super().get_changeform_initial_data(request)
 
         try:
-            initial['project'] = Project.objects.get(
+            initial['projects'] = Project.objects.get(
                 pk=request.GET.get('project_pk'))
         except:
             pass
